@@ -910,8 +910,12 @@ window.renderDashboard = () => {
   const latest=paramLogs[0];
   const pdiv=document.getElementById('dash-params');
   if(latest){
-    const statusFn={ph:v=>v>=6.5&&v<=7.8?'good':'warn',ammonia:v=>v===0?'good':v<0.25?'warn':'bad',nitrite:v=>v===0?'good':v<0.25?'warn':'bad',nitrate:v=>v<=20?'good':v<=40?'warn':'bad',temp:v=>v>=23&&v<=27?'good':'warn'};
-    const boxes=PARAMS.filter(p=>latest[p.key]!=null).map(p=>{const fn=statusFn[p.key];const cls=typeof fn==='function'?fn(latest[p.key]):'good';return`<div class="stat-box ${cls}"><div class="stat-status-dot"></div><div class="val">${latest[p.key]}<span>${p.unit}</span></div><div class="lbl">${p.label}</div></div>`;}).join('');
+    // Use evalParam so dashboard respects user's custom ranges from settings
+    const boxes=PARAMS.filter(p=>latest[p.key]!=null).map(p=>{
+      const s=evalParam(p.key,latest[p.key]);
+      const cls=s==='ok'?'good':s==='crit'?'bad':s==='hi'||s==='lo'?'warn':'good';
+      return`<div class="stat-box ${cls}"><div class="stat-status-dot"></div><div class="val">${latest[p.key]}<span>${p.unit}</span></div><div class="lbl">${p.label}</div></div>`;
+    }).join('');
     pdiv.innerHTML=boxes?`<div class="stats-grid">${boxes}</div>`:'';
   } else {pdiv.innerHTML='';}
 
