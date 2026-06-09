@@ -1,5 +1,5 @@
 // AquaLog Service Worker v1.0
-const CACHE = 'aqualog-v1';
+const CACHE = 'aqualog-v2';
 const ASSETS = [
   './index.html',
   './manifest.json',
