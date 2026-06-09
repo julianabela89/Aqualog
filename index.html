@@ -15,415 +15,275 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --deep:    #050d1a;
-  --abyss:   #081628;
-  --surface: #0a1f35;
-  --panel:   #0d2540;
-  --rim:     #123258;
-  --glow:    #00e5c8;
-  --glow2:   #00aaff;
-  --warn:    #ffb347;
-  --danger:  #ff5c6a;
-  --text:    #d4eaf7;
-  --muted:   #6a9ab8;
-  --font-head: 'Cinzel', serif;
-  --font-body: 'DM Sans', sans-serif;
-  --nav-h:   64px;
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --safe-top:    env(safe-area-inset-top, 0px);
+  --deep:#050d1a; --abyss:#081628; --surface:#0a1f35; --panel:#0d2540; --rim:#123258;
+  --glow:#00e5c8; --glow2:#00aaff; --warn:#ffb347; --danger:#ff5c6a;
+  --text:#d4eaf7; --muted:#6a9ab8;
+  --font-head:'Cinzel',serif; --font-body:'DM Sans',sans-serif;
+  --nav-h:64px; --safe-bottom:env(safe-area-inset-bottom,0px); --safe-top:env(safe-area-inset-top,0px);
 }
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; overflow: hidden; }
-body {
-  background: var(--deep);
-  background-image:
-    radial-gradient(ellipse at 20% 80%, rgba(0,229,200,0.05) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 10%, rgba(0,170,255,0.05) 0%, transparent 50%);
-  background-attachment: fixed;
-  color: var(--text);
-  font-family: var(--font-body);
-  font-weight: 300;
-}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--deep);background-image:radial-gradient(ellipse at 20% 80%,rgba(0,229,200,0.05) 0%,transparent 50%),radial-gradient(ellipse at 80% 10%,rgba(0,170,255,0.05) 0%,transparent 50%);background-attachment:fixed;color:var(--text);font-family:var(--font-body);font-weight:300;}
 
-/* ── App shell ─────────────────────────────────────────── */
-#app-shell {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  height: 100dvh;
-}
+/* ── Login screen ── */
+#login-screen{position:fixed;inset:0;background:var(--deep);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;z-index:1000;padding:32px;}
+#login-screen .login-logo{width:80px;height:80px;background:linear-gradient(135deg,var(--glow),var(--glow2));border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:36px;box-shadow:0 0 40px rgba(0,229,200,0.3);}
+#login-screen h1{font-family:var(--font-head);font-size:2rem;color:#fff;letter-spacing:0.05em;}
+#login-screen p{color:var(--muted);font-size:0.9rem;text-align:center;line-height:1.6;max-width:280px;}
+.google-btn{display:flex;align-items:center;gap:12px;background:#fff;color:#1f1f1f;border:none;border-radius:12px;padding:14px 24px;font-size:1rem;font-weight:500;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 14px rgba(0,0,0,0.3);width:100%;max-width:280px;justify-content:center;}
+.google-btn:active{transform:scale(0.98);}
+.google-btn img{width:20px;height:20px;}
+.login-status{font-size:0.8rem;color:var(--muted);text-align:center;}
+#login-screen.hidden{display:none;}
 
-/* ── Top header ────────────────────────────────────────── */
-.top-bar {
-  display: flex;
-  align-items: center;
-  padding: calc(var(--safe-top) + 12px) 18px 12px;
-  background: var(--abyss);
-  border-bottom: 1px solid var(--rim);
-  flex-shrink: 0;
-  gap: 12px;
-}
-.top-bar .logo-icon {
-  width: 36px; height: 36px;
-  background: linear-gradient(135deg, var(--glow), var(--glow2));
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
-  box-shadow: 0 0 14px rgba(0,229,200,0.25);
-  flex-shrink: 0;
-}
-.top-bar h1 { font-family: var(--font-head); font-size: 1.2rem; color: #fff; letter-spacing: 0.04em; flex: 1; }
-.top-bar .tank-sub { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
-.top-bar-right { display: flex; gap: 8px; align-items: center; }
-.icon-btn {
-  width: 36px; height: 36px;
-  border: 1px solid var(--rim);
-  border-radius: 9px;
-  background: transparent;
-  color: var(--muted);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.icon-btn:active { background: var(--rim); color: var(--glow); }
-.notif-dot {
-  position: relative;
-}
-.notif-dot::after {
-  content: '';
-  position: absolute;
-  top: 4px; right: 4px;
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: var(--danger);
-  border: 1px solid var(--abyss);
-  display: none;
-}
-.notif-dot.has-alerts::after { display: block; }
+/* ── Sync indicator ── */
+#sync-indicator{position:fixed;top:calc(var(--safe-top)+6px);right:8px;z-index:500;font-size:0.65rem;color:var(--muted);display:flex;align-items:center;gap:4px;opacity:0;transition:opacity 0.3s;}
+#sync-indicator.visible{opacity:1;}
+#sync-indicator.syncing{color:var(--warn);}
+#sync-indicator.synced{color:var(--glow);}
+#sync-indicator.error{color:var(--danger);}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+.sync-dot.pulse{animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
 
-/* ── Scrollable content ─────────────────────────────────── */
-#page-content {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  padding: 16px 16px calc(var(--nav-h) + var(--safe-bottom) + 16px);
-}
+/* ── App shell ── */
+#app-shell{display:flex;flex-direction:column;height:100vh;height:100dvh;}
+.top-bar{display:flex;align-items:center;padding:calc(var(--safe-top)+12px) 18px 12px;background:var(--abyss);border-bottom:1px solid var(--rim);flex-shrink:0;gap:12px;}
+.top-bar .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--glow),var(--glow2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 0 14px rgba(0,229,200,0.25);flex-shrink:0;}
+.top-bar h1{font-family:var(--font-head);font-size:1.2rem;color:#fff;letter-spacing:0.04em;flex:1;}
+.top-bar .tank-sub{font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;}
+.top-bar-right{display:flex;gap:8px;align-items:center;}
+.icon-btn{width:36px;height:36px;border:1px solid var(--rim);border-radius:9px;background:transparent;color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all 0.2s;}
+.icon-btn:active{background:var(--rim);color:var(--glow);}
+.user-avatar{width:32px;height:32px;border-radius:50%;border:2px solid var(--rim);object-fit:cover;cursor:pointer;}
 
-/* ── Bottom nav ─────────────────────────────────────────── */
-.bottom-nav {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  height: calc(var(--nav-h) + var(--safe-bottom));
-  padding-bottom: var(--safe-bottom);
-  background: var(--abyss);
-  border-top: 1px solid var(--rim);
-  display: flex;
-  align-items: stretch;
-  z-index: 100;
-}
-.nav-item {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  border: none;
-  background: transparent;
-  color: var(--muted);
-  font-family: var(--font-body);
-  font-size: 0.6rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: color 0.2s;
-  padding: 8px 4px;
-  position: relative;
-}
-.nav-item .ni-icon { font-size: 1.3rem; line-height: 1; }
-.nav-item.active { color: var(--glow); }
-.nav-item.active::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 20%; right: 20%;
-  height: 2px;
-  background: linear-gradient(90deg, var(--glow), var(--glow2));
-  border-radius: 0 0 3px 3px;
-}
+/* ── Page content ── */
+#page-content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:16px 16px calc(var(--nav-h) + var(--safe-bottom) + 16px);}
 
-/* ── Page panels ─────────────────────────────────────────── */
-.page { display: none; }
-.page.active { display: block; animation: fadeUp 0.22s ease; }
-@keyframes fadeUp { from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);} }
+/* ── Bottom nav ── */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:calc(var(--nav-h) + var(--safe-bottom));padding-bottom:var(--safe-bottom);background:var(--abyss);border-top:1px solid var(--rim);display:flex;align-items:stretch;z-index:100;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:none;background:transparent;color:var(--muted);font-family:var(--font-body);font-size:0.6rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;transition:color 0.2s;padding:8px 4px;position:relative;}
+.nav-item .ni-icon{font-size:1.3rem;line-height:1;}
+.nav-item.active{color:var(--glow);}
+.nav-item.active::before{content:'';position:absolute;top:0;left:20%;right:20%;height:2px;background:linear-gradient(90deg,var(--glow),var(--glow2));border-radius:0 0 3px 3px;}
 
-/* ── Cards ───────────────────────────────────────────────── */
-.card {
-  background: var(--panel);
-  border: 1px solid var(--rim);
-  border-radius: 16px;
-  padding: 18px 18px;
-  margin-bottom: 14px;
-  position: relative;
-  overflow: hidden;
-}
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, var(--glow), var(--glow2));
-  opacity: 0.4;
-}
-.card h2 {
-  font-family: var(--font-head);
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  color: var(--glow);
-  margin-bottom: 14px;
-}
-.card h3 {
-  font-family: var(--font-head);
-  font-size: 0.78rem;
-  color: var(--text);
-  margin: 18px 0 12px;
-  letter-spacing: 0.05em;
-}
-.card h3:first-child { margin-top: 0; }
+/* ── Pages ── */
+.page{display:none;}
+.page.active{display:block;animation:fadeUp 0.22s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
 
-/* ── Banner cards (dashboard) ──────────────────────────── */
-.banner-card {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  background: linear-gradient(135deg, rgba(0,229,200,0.07), rgba(0,170,255,0.05));
-  border: 1px solid rgba(0,229,200,0.2);
-  border-radius: 14px;
-  padding: 14px 16px;
-  margin-bottom: 12px;
-}
-.banner-card.due    { border-color: rgba(255,179,71,0.4);  background: linear-gradient(135deg,rgba(255,179,71,0.08),rgba(255,140,66,0.04)); }
-.banner-card.overdue{ border-color: rgba(255,92,106,0.45); background: linear-gradient(135deg,rgba(255,92,106,0.09),rgba(255,60,80,0.05)); }
-.banner-card .bc-icon { font-size: 1.8rem; flex-shrink: 0; }
-.banner-card .bc-label { font-family:var(--font-head); font-size:0.65rem; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; }
-.banner-card .bc-val   { font-family:var(--font-head); font-size:1.2rem; color:var(--glow); line-height:1.15; margin-top:1px; }
-.banner-card.due    .bc-val { color: var(--warn); }
-.banner-card.overdue .bc-val { color: var(--danger); }
-.banner-card .bc-sub { font-size:0.68rem; color:var(--muted); margin-top:2px; }
-.banner-card .bc-right { margin-left: auto; text-align: right; flex-shrink: 0; }
-.banner-card .bc-right .bcd { font-size:0.68rem; color:var(--muted); }
-.banner-card .bc-right .bcv { font-size:0.85rem; }
+/* ── Cards ── */
+.card{background:var(--panel);border:1px solid var(--rim);border-radius:16px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--glow),var(--glow2));opacity:0.4;}
+.card h2{font-family:var(--font-head);font-size:0.85rem;font-weight:600;letter-spacing:0.06em;color:var(--glow);margin-bottom:14px;}
+.card h3{font-family:var(--font-head);font-size:0.78rem;color:var(--text);margin:18px 0 12px;letter-spacing:0.05em;}
+.card h3:first-child{margin-top:0;}
 
-/* Stats grid */
-.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-.stat-box {
-  background: var(--surface);
-  border: 1px solid var(--rim);
-  border-radius: 12px;
-  padding: 14px 12px;
-  text-align: center;
-  position: relative;
-}
-.stat-box .val { font-family:var(--font-head); font-size:1.4rem; color:#fff; line-height:1; }
-.stat-box .val span { font-size:0.8rem; color:var(--muted); }
-.stat-box .lbl { font-size:0.62rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-top:4px; }
-.stat-box.good { border-color:rgba(0,229,200,0.3); } .stat-box.good .val { color:var(--glow); }
-.stat-box.warn { border-color:rgba(255,179,71,0.3); } .stat-box.warn .val { color:var(--warn); }
-.stat-box.bad  { border-color:rgba(255,92,106,0.35); } .stat-box.bad  .val { color:var(--danger); }
-.stat-status-dot { position:absolute; top:8px; right:8px; width:7px; height:7px; border-radius:50%; }
-.stat-box.good .stat-status-dot { background:var(--glow); box-shadow:0 0 5px var(--glow); }
-.stat-box.warn .stat-status-dot { background:var(--warn); box-shadow:0 0 5px var(--warn); }
-.stat-box.bad  .stat-status-dot { background:var(--danger); box-shadow:0 0 5px var(--danger); }
+/* ── Banner cards ── */
+.banner-card{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,rgba(0,229,200,0.07),rgba(0,170,255,0.05));border:1px solid rgba(0,229,200,0.2);border-radius:14px;padding:14px 16px;margin-bottom:12px;}
+.banner-card.due{border-color:rgba(255,179,71,0.4);background:linear-gradient(135deg,rgba(255,179,71,0.08),rgba(255,140,66,0.04));}
+.banner-card.overdue{border-color:rgba(255,92,106,0.45);background:linear-gradient(135deg,rgba(255,92,106,0.09),rgba(255,60,80,0.05));}
+.banner-card .bc-icon{font-size:1.8rem;flex-shrink:0;}
+.banner-card .bc-label{font-family:var(--font-head);font-size:0.65rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;}
+.banner-card .bc-val{font-family:var(--font-head);font-size:1.2rem;color:var(--glow);line-height:1.15;margin-top:1px;}
+.banner-card.due .bc-val{color:var(--warn);}
+.banner-card.overdue .bc-val{color:var(--danger);}
+.banner-card .bc-sub{font-size:0.68rem;color:var(--muted);margin-top:2px;}
+.banner-card .bc-right{margin-left:auto;text-align:right;flex-shrink:0;}
+.banner-card .bc-right .bcd{font-size:0.68rem;color:var(--muted);}
+.banner-card .bc-right .bcv{font-size:0.85rem;}
 
-/* Fish count */
-.fish-count-banner {
-  display:flex; align-items:center; gap:14px;
-  background:linear-gradient(135deg,rgba(0,170,255,0.07),rgba(0,229,200,0.05));
-  border:1px solid rgba(0,170,255,0.2); border-radius:14px;
-  padding:14px 16px; margin-bottom:12px;
-}
-.fish-count-banner .fc-icon { font-size:1.8rem; }
-.fish-count-banner .fc-num  { font-family:var(--font-head); font-size:2rem; color:var(--glow2); line-height:1; }
-.fish-count-banner .fc-lbl  { font-size:0.62rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-top:2px; }
-.fish-count-banner .fc-detail { font-size:0.72rem; color:var(--muted); margin-top:2px; }
+/* ── Stats ── */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.stat-box{background:var(--surface);border:1px solid var(--rim);border-radius:12px;padding:14px 12px;text-align:center;position:relative;}
+.stat-box .val{font-family:var(--font-head);font-size:1.4rem;color:#fff;line-height:1;}
+.stat-box .val span{font-size:0.8rem;color:var(--muted);}
+.stat-box .lbl{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-top:4px;}
+.stat-box.good{border-color:rgba(0,229,200,0.3);}.stat-box.good .val{color:var(--glow);}
+.stat-box.warn{border-color:rgba(255,179,71,0.3);}.stat-box.warn .val{color:var(--warn);}
+.stat-box.bad{border-color:rgba(255,92,106,0.35);}.stat-box.bad .val{color:var(--danger);}
+.stat-status-dot{position:absolute;top:8px;right:8px;width:7px;height:7px;border-radius:50%;}
+.stat-box.good .stat-status-dot{background:var(--glow);box-shadow:0 0 5px var(--glow);}
+.stat-box.warn .stat-status-dot{background:var(--warn);box-shadow:0 0 5px var(--warn);}
+.stat-box.bad .stat-status-dot{background:var(--danger);box-shadow:0 0 5px var(--danger);}
 
-/* ── Forms ───────────────────────────────────────────────── */
-.form-group { display:flex; flex-direction:column; gap:5px; margin-bottom:12px; }
-.form-group label { font-size:0.68rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); }
-.form-group input, .form-group select, .form-group textarea {
-  background:var(--surface); border:1px solid var(--rim); border-radius:9px;
-  color:var(--text); font-family:var(--font-body); font-size:1rem;
-  padding:12px 14px; outline:none;
-  transition:border-color 0.2s, box-shadow 0.2s; width:100%;
-  -webkit-appearance: none; appearance: none;
-}
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-  border-color:var(--glow); box-shadow:0 0 0 3px rgba(0,229,200,0.1);
-}
-.form-group textarea { resize:vertical; min-height:80px; }
-.form-group select option { background:var(--panel); }
-.form-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-.range-hint { font-size:0.65rem; color:var(--muted); }
-.param-input-wrap { position:relative; }
-.param-input-wrap input { padding-right:38px; }
-.param-indicator { position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:0.75rem; font-weight:600; pointer-events:none; display:none; }
-.param-indicator.ok   { color:var(--glow);   display:block; }
-.param-indicator.hi   { color:var(--warn);   display:block; }
-.param-indicator.lo   { color:var(--warn);   display:block; }
-.param-indicator.crit { color:var(--danger); display:block; }
+/* ── Fish count ── */
+.fish-count-banner{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,rgba(0,170,255,0.07),rgba(0,229,200,0.05));border:1px solid rgba(0,170,255,0.2);border-radius:14px;padding:14px 16px;margin-bottom:12px;}
+.fish-count-banner .fc-icon{font-size:1.8rem;}
+.fish-count-banner .fc-num{font-family:var(--font-head);font-size:2rem;color:var(--glow2);line-height:1;}
+.fish-count-banner .fc-lbl{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-top:2px;}
+.fish-count-banner .fc-detail{font-size:0.72rem;color:var(--muted);margin-top:2px;}
 
-/* Result summary */
-.result-summary { display:none; background:var(--surface); border:1px solid var(--rim); border-radius:12px; padding:14px; margin-bottom:14px; }
-.result-summary.visible { display:block; }
-.result-summary h4 { font-family:var(--font-head); font-size:0.75rem; color:var(--glow); margin-bottom:10px; letter-spacing:0.06em; }
-.rs-row { display:flex; align-items:center; gap:8px; padding:5px 0; border-bottom:1px solid var(--rim); font-size:0.8rem; }
-.rs-row:last-child { border-bottom:none; }
-.rs-name { min-width:55px; color:var(--muted); font-size:0.75rem; }
-.rs-val  { font-weight:500; min-width:55px; font-size:0.8rem; }
-.rs-range { font-size:0.65rem; color:var(--muted); flex:1; }
-.rs-status { font-size:0.65rem; font-weight:600; padding:2px 7px; border-radius:20px; white-space:nowrap; }
-.rs-status.ok   { background:rgba(0,229,200,0.12);  color:var(--glow);   border:1px solid rgba(0,229,200,0.2); }
-.rs-status.warn { background:rgba(255,179,71,0.12); color:var(--warn);   border:1px solid rgba(255,179,71,0.2); }
-.rs-status.crit { background:rgba(255,92,106,0.12); color:var(--danger); border:1px solid rgba(255,92,106,0.2); }
+/* ── Forms ── */
+.form-group{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;}
+.form-group label{font-size:0.68rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);}
+.form-group input,.form-group select,.form-group textarea{background:var(--surface);border:1px solid var(--rim);border-radius:9px;color:var(--text);font-family:var(--font-body);font-size:1rem;padding:12px 14px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;width:100%;-webkit-appearance:none;appearance:none;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--glow);box-shadow:0 0 0 3px rgba(0,229,200,0.1);}
+.form-group textarea{resize:vertical;min-height:80px;}
+.form-group select option{background:var(--panel);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.range-hint{font-size:0.65rem;color:var(--muted);}
+.param-input-wrap{position:relative;}
+.param-input-wrap input{padding-right:38px;}
+.param-indicator{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:0.75rem;font-weight:600;pointer-events:none;display:none;}
+.param-indicator.ok{color:var(--glow);display:block;}
+.param-indicator.hi{color:var(--warn);display:block;}
+.param-indicator.lo{color:var(--warn);display:block;}
+.param-indicator.crit{color:var(--danger);display:block;}
 
-/* ── Buttons ──────────────────────────────────────────────── */
-.btn {
-  width:100%; padding:15px; border:none; border-radius:12px;
-  font-family:var(--font-body); font-size:1rem; font-weight:500;
-  cursor:pointer; transition:all 0.2s; letter-spacing:0.03em;
-  -webkit-appearance:none; appearance:none;
-}
-.btn:active { transform:scale(0.98); }
-.btn-primary { background:linear-gradient(135deg,var(--glow),var(--glow2)); color:var(--deep); box-shadow:0 4px 14px rgba(0,229,200,0.28); margin-bottom:10px; }
-.btn-secondary { background:transparent; border:1px solid var(--rim); color:var(--muted); }
-.btn-secondary:active { border-color:var(--glow); color:var(--glow); }
-.btn-danger { background:transparent; border:1px solid rgba(255,92,106,0.3); color:var(--danger); }
-.btn-warn   { background:transparent; border:1px solid rgba(255,179,71,0.3); color:var(--warn); }
-.btn-sm { padding:9px 16px; width:auto; font-size:0.8rem; border-radius:9px; }
+/* ── Result summary ── */
+.result-summary{display:none;background:var(--surface);border:1px solid var(--rim);border-radius:12px;padding:14px;margin-bottom:14px;}
+.result-summary.visible{display:block;}
+.result-summary h4{font-family:var(--font-head);font-size:0.75rem;color:var(--glow);margin-bottom:10px;letter-spacing:0.06em;}
+.rs-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--rim);font-size:0.8rem;}
+.rs-row:last-child{border-bottom:none;}
+.rs-name{min-width:55px;color:var(--muted);font-size:0.75rem;}
+.rs-val{font-weight:500;min-width:55px;font-size:0.8rem;}
+.rs-range{font-size:0.65rem;color:var(--muted);flex:1;}
+.rs-status{font-size:0.65rem;font-weight:600;padding:2px 7px;border-radius:20px;white-space:nowrap;}
+.rs-status.ok{background:rgba(0,229,200,0.12);color:var(--glow);border:1px solid rgba(0,229,200,0.2);}
+.rs-status.warn{background:rgba(255,179,71,0.12);color:var(--warn);border:1px solid rgba(255,179,71,0.2);}
+.rs-status.crit{background:rgba(255,92,106,0.12);color:var(--danger);border:1px solid rgba(255,92,106,0.2);}
 
-/* ── Category grid ────────────────────────────────────────── */
-.cat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:16px; }
-.cat-card { background:var(--surface); border:1px solid var(--rim); border-radius:11px; padding:10px 6px; text-align:center; cursor:pointer; transition:all 0.15s; user-select:none; }
-.cat-card:active { transform:scale(0.96); }
-.cat-card.selected { border-color:var(--glow); background:rgba(0,229,200,0.08); }
-.cat-card .cat-icon { font-size:1.3rem; margin-bottom:4px; }
-.cat-card .cat-name { font-size:0.6rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; line-height:1.3; }
-.cat-card.selected .cat-name { color:var(--glow); }
+/* ── Buttons ── */
+.btn{width:100%;padding:15px;border:none;border-radius:12px;font-family:var(--font-body);font-size:1rem;font-weight:500;cursor:pointer;transition:all 0.2s;letter-spacing:0.03em;-webkit-appearance:none;appearance:none;}
+.btn:active{transform:scale(0.98);}
+.btn-primary{background:linear-gradient(135deg,var(--glow),var(--glow2));color:var(--deep);box-shadow:0 4px 14px rgba(0,229,200,0.28);margin-bottom:10px;}
+.btn-secondary{background:transparent;border:1px solid var(--rim);color:var(--muted);}
+.btn-secondary:active{border-color:var(--glow);color:var(--glow);}
+.btn-danger{background:transparent;border:1px solid rgba(255,92,106,0.3);color:var(--danger);}
+.btn-sm{padding:9px 16px;width:auto;font-size:0.8rem;border-radius:9px;}
 
-/* ── Timeline ─────────────────────────────────────────────── */
-.timeline { position:relative; padding-left:24px; }
-.timeline::before { content:''; position:absolute; left:6px; top:6px; bottom:6px; width:2px; background:var(--rim); border-radius:2px; }
-.tl-item { position:relative; margin-bottom:16px; }
-.tl-item::before { content:''; position:absolute; left:-20px; top:6px; width:9px; height:9px; border-radius:50%; border:2px solid var(--glow); background:var(--panel); }
-.tl-date { font-size:0.65rem; color:var(--muted); margin-bottom:3px; }
-.tl-body { display:flex; align-items:flex-start; gap:8px; flex-wrap:wrap; }
-.tl-text { font-size:0.82rem; flex:1; min-width:100px; }
-.tl-note { font-size:0.72rem; color:var(--muted); margin-top:3px; }
-.tl-del  { flex-shrink:0; }
+/* ── Category grid ── */
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;}
+.cat-card{background:var(--surface);border:1px solid var(--rim);border-radius:11px;padding:10px 6px;text-align:center;cursor:pointer;transition:all 0.15s;user-select:none;}
+.cat-card:active{transform:scale(0.96);}
+.cat-card.selected{border-color:var(--glow);background:rgba(0,229,200,0.08);}
+.cat-card .cat-icon{font-size:1.3rem;margin-bottom:4px;}
+.cat-card .cat-name{font-size:0.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;line-height:1.3;}
+.cat-card.selected .cat-name{color:var(--glow);}
 
-/* ── Filter bar ───────────────────────────────────────────── */
-.filter-scroll { overflow-x:auto; -webkit-overflow-scrolling:touch; margin-bottom:14px; padding-bottom:4px; }
-.filter-bar { display:flex; gap:7px; white-space:nowrap; }
-.filter-btn { padding:6px 12px; border-radius:20px; border:1px solid var(--rim); background:transparent; color:var(--muted); font-family:var(--font-body); font-size:0.72rem; cursor:pointer; transition:all 0.15s; white-space:nowrap; }
-.filter-btn.on { border-color:var(--glow); color:var(--glow); background:rgba(0,229,200,0.07); }
+/* ── Timeline ── */
+.timeline{position:relative;padding-left:24px;}
+.timeline::before{content:'';position:absolute;left:6px;top:6px;bottom:6px;width:2px;background:var(--rim);border-radius:2px;}
+.tl-item{position:relative;margin-bottom:16px;}
+.tl-item::before{content:'';position:absolute;left:-20px;top:6px;width:9px;height:9px;border-radius:50%;border:2px solid var(--glow);background:var(--panel);}
+.tl-date{font-size:0.65rem;color:var(--muted);margin-bottom:3px;}
+.tl-body{display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap;}
+.tl-text{font-size:0.82rem;flex:1;min-width:100px;}
+.tl-note{font-size:0.72rem;color:var(--muted);margin-top:3px;}
+.tl-del{flex-shrink:0;}
 
-/* ── Badges ───────────────────────────────────────────────── */
-.badge { display:inline-block; padding:3px 9px; border-radius:20px; font-size:0.68rem; font-weight:500; white-space:nowrap; }
-.badge-blue   { background:rgba(0,170,255,0.15);   color:var(--glow2);   border:1px solid rgba(0,170,255,0.25); }
-.badge-teal   { background:rgba(0,229,200,0.12);   color:var(--glow);    border:1px solid rgba(0,229,200,0.2); }
-.badge-warn   { background:rgba(255,179,71,0.12);  color:var(--warn);    border:1px solid rgba(255,179,71,0.2); }
-.badge-purple { background:rgba(160,120,255,0.15); color:#c3a6ff;        border:1px solid rgba(160,120,255,0.25); }
-.badge-green  { background:rgba(80,220,130,0.12);  color:#5ddc8a;        border:1px solid rgba(80,220,130,0.22); }
-.badge-pink   { background:rgba(255,120,180,0.13); color:#ff8fc8;        border:1px solid rgba(255,120,180,0.22); }
-.badge-gray   { background:rgba(150,170,200,0.12); color:#a0b8cc;        border:1px solid rgba(150,170,200,0.2); }
+/* ── Filter bar ── */
+.filter-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:14px;padding-bottom:4px;}
+.filter-bar{display:flex;gap:7px;white-space:nowrap;}
+.filter-btn{padding:6px 12px;border-radius:20px;border:1px solid var(--rim);background:transparent;color:var(--muted);font-family:var(--font-body);font-size:0.72rem;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.filter-btn.on{border-color:var(--glow);color:var(--glow);background:rgba(0,229,200,0.07);}
 
-/* ── History list ─────────────────────────────────────────── */
-.hist-item { border-bottom:1px solid rgba(18,50,88,0.5); padding:11px 0; }
-.hist-item:last-child { border-bottom:none; }
-.hist-top { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
-.hist-date { font-size:0.7rem; color:var(--muted); margin-left:auto; }
-.hist-detail { font-size:0.8rem; color:var(--text); }
-.hist-note  { font-size:0.72rem; color:var(--muted); margin-top:2px; }
+/* ── Badges ── */
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:0.68rem;font-weight:500;white-space:nowrap;}
+.badge-blue{background:rgba(0,170,255,0.15);color:var(--glow2);border:1px solid rgba(0,170,255,0.25);}
+.badge-teal{background:rgba(0,229,200,0.12);color:var(--glow);border:1px solid rgba(0,229,200,0.2);}
+.badge-warn{background:rgba(255,179,71,0.12);color:var(--warn);border:1px solid rgba(255,179,71,0.2);}
+.badge-purple{background:rgba(160,120,255,0.15);color:#c3a6ff;border:1px solid rgba(160,120,255,0.25);}
+.badge-green{background:rgba(80,220,130,0.12);color:#5ddc8a;border:1px solid rgba(80,220,130,0.22);}
+.badge-pink{background:rgba(255,120,180,0.13);color:#ff8fc8;border:1px solid rgba(255,120,180,0.22);}
+.badge-gray{background:rgba(150,170,200,0.12);color:#a0b8cc;border:1px solid rgba(150,170,200,0.2);}
 
-/* ── Range rows (settings) ────────────────────────────────── */
-.range-row { background:var(--surface); border:1px solid var(--rim); border-radius:11px; padding:12px 14px; margin-bottom:10px; }
-.range-row .rr-label { font-size:0.7rem; text-transform:uppercase; letter-spacing:0.09em; color:var(--muted); margin-bottom:10px; display:flex; align-items:center; gap:6px; }
-.range-row .rr-inputs { display:grid; grid-template-columns:1fr auto 1fr; gap:8px; align-items:center; }
-.range-row .rr-sep { text-align:center; color:var(--muted); font-size:0.72rem; }
-.range-row input { background:var(--panel); border:1px solid var(--rim); border-radius:8px; color:var(--text); font-size:0.9rem; padding:9px 10px; outline:none; width:100%; transition:border-color 0.2s; }
-.range-row input:focus { border-color:var(--glow); }
-.range-row .rr-unit { font-size:0.65rem; color:var(--muted); margin-top:6px; }
+/* ── History list ── */
+.hist-item{border-bottom:1px solid rgba(18,50,88,0.5);padding:11px 0;}
+.hist-item:last-child{border-bottom:none;}
+.hist-top{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.hist-date{font-size:0.7rem;color:var(--muted);margin-left:auto;}
+.hist-detail{font-size:0.8rem;color:var(--text);}
+.hist-note{font-size:0.72rem;color:var(--muted);margin-top:2px;}
 
-/* ── Notification settings panel ─────────────────────────── */
-.notif-panel { background:var(--surface); border:1px solid var(--rim); border-radius:12px; padding:16px; margin-bottom:14px; }
-.notif-row { display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(18,50,88,0.5); }
-.notif-row:last-child { border-bottom:none; }
-.notif-row .nr-label { font-size:0.85rem; }
-.notif-row .nr-sub   { font-size:0.68rem; color:var(--muted); margin-top:2px; }
-.toggle {
-  position:relative; width:46px; height:26px; flex-shrink:0;
-}
-.toggle input { opacity:0; width:0; height:0; }
-.toggle-slider {
-  position:absolute; cursor:pointer; inset:0;
-  background:var(--rim); border-radius:26px; transition:0.3s;
-}
-.toggle-slider::before {
-  content:''; position:absolute;
-  width:18px; height:18px; left:4px; bottom:4px;
-  background:#fff; border-radius:50%; transition:0.3s;
-}
-.toggle input:checked + .toggle-slider { background:var(--glow); }
-.toggle input:checked + .toggle-slider::before { transform:translateX(20px); }
+/* ── Range rows ── */
+.range-row{background:var(--surface);border:1px solid var(--rim);border-radius:11px;padding:12px 14px;margin-bottom:10px;}
+.range-row .rr-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.09em;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.range-row .rr-inputs{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;}
+.range-row .rr-sep{text-align:center;color:var(--muted);font-size:0.72rem;}
+.range-row input{background:var(--panel);border:1px solid var(--rim);border-radius:8px;color:var(--text);font-size:0.9rem;padding:9px 10px;outline:none;width:100%;transition:border-color 0.2s;}
+.range-row input:focus{border-color:var(--glow);}
+.range-row .rr-unit{font-size:0.65rem;color:var(--muted);margin-top:6px;}
 
-/* ── Chart ────────────────────────────────────────────────── */
-.chart-wrap { position:relative; height:240px; }
-.chart-controls { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; align-items:center; }
-.param-toggles { display:flex; flex-wrap:wrap; gap:6px; flex:1; }
-.param-toggle { padding:4px 10px; border-radius:20px; border:1px solid var(--rim); background:transparent; color:var(--muted); font-family:var(--font-body); font-size:0.68rem; cursor:pointer; }
-.param-toggle.on { border-color:var(--glow); color:var(--glow); background:rgba(0,229,200,0.07); }
+/* ── Notification panel ── */
+.notif-panel{background:var(--surface);border:1px solid var(--rim);border-radius:12px;padding:16px;margin-bottom:14px;}
+.notif-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(18,50,88,0.5);}
+.notif-row:last-child{border-bottom:none;}
+.notif-row .nr-label{font-size:0.85rem;}
+.notif-row .nr-sub{font-size:0.68rem;color:var(--muted);margin-top:2px;}
+.toggle{position:relative;width:46px;height:26px;flex-shrink:0;}
+.toggle input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;cursor:pointer;inset:0;background:var(--rim);border-radius:26px;transition:0.3s;}
+.toggle-slider::before{content:'';position:absolute;width:18px;height:18px;left:4px;bottom:4px;background:#fff;border-radius:50%;transition:0.3s;}
+.toggle input:checked+.toggle-slider{background:var(--glow);}
+.toggle input:checked+.toggle-slider::before{transform:translateX(20px);}
 
-/* ── Empty state ──────────────────────────────────────────── */
-.empty { text-align:center; padding:40px 20px; color:var(--muted); }
-.empty .icon { font-size:2.5rem; margin-bottom:10px; opacity:0.35; }
-.empty p { font-size:0.85rem; }
+/* ── Chart ── */
+.chart-wrap{position:relative;height:240px;}
+.chart-controls{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;align-items:center;}
+.param-toggles{display:flex;flex-wrap:wrap;gap:6px;flex:1;}
+.param-toggle{padding:4px 10px;border-radius:20px;border:1px solid var(--rim);background:transparent;color:var(--muted);font-family:var(--font-body);font-size:0.68rem;cursor:pointer;}
+.param-toggle.on{border-color:var(--glow);color:var(--glow);background:rgba(0,229,200,0.07);}
 
-/* ── Toast ────────────────────────────────────────────────── */
-#alert-box { position:fixed; top:calc(var(--safe-top) + 70px); left:16px; right:16px; z-index:200; pointer-events:none; }
-.toast { background:var(--panel); border:1px solid var(--rim); border-radius:12px; padding:12px 16px; font-size:0.85rem; box-shadow:0 8px 28px rgba(0,0,0,0.5); display:flex; align-items:center; gap:10px; animation:slideDown 0.25s ease; margin-bottom:8px; pointer-events:auto; }
-.toast.ok  { border-left:3px solid var(--glow); }
-.toast.err { border-left:3px solid var(--danger); }
-.toast.wrn { border-left:3px solid var(--warn); }
-@keyframes slideDown { from{opacity:0;transform:translateY(-12px);}to{opacity:1;transform:translateY(0);} }
+/* ── Empty ── */
+.empty{text-align:center;padding:40px 20px;color:var(--muted);}
+.empty .icon{font-size:2.5rem;margin-bottom:10px;opacity:0.35;}
+.empty p{font-size:0.85rem;}
 
-/* ── Install banner ───────────────────────────────────────── */
-#install-banner {
-  display:none; align-items:center; gap:12px;
-  background: linear-gradient(135deg, rgba(0,229,200,0.1), rgba(0,170,255,0.08));
-  border:1px solid rgba(0,229,200,0.25); border-radius:14px;
-  padding:14px 16px; margin-bottom:14px;
-}
-#install-banner .ib-icon { font-size:1.5rem; }
-#install-banner .ib-text { flex:1; font-size:0.82rem; }
-#install-banner .ib-sub  { font-size:0.68rem; color:var(--muted); margin-top:2px; }
-#install-banner button   { padding:9px 14px; white-space:nowrap; width:auto; font-size:0.78rem; border-radius:9px; }
+/* ── Toast ── */
+#alert-box{position:fixed;top:calc(var(--safe-top)+70px);left:16px;right:16px;z-index:200;pointer-events:none;}
+.toast{background:var(--panel);border:1px solid var(--rim);border-radius:12px;padding:12px 16px;font-size:0.85rem;box-shadow:0 8px 28px rgba(0,0,0,0.5);display:flex;align-items:center;gap:10px;animation:slideDown 0.25s ease;margin-bottom:8px;pointer-events:auto;}
+.toast.ok{border-left:3px solid var(--glow);}
+.toast.err{border-left:3px solid var(--danger);}
+.toast.wrn{border-left:3px solid var(--warn);}
+@keyframes slideDown{from{opacity:0;transform:translateY(-12px);}to{opacity:1;transform:translateY(0);}}
 
-/* ── Section subtitle ─────────────────────────────────────── */
-.sub { color:var(--muted); font-size:0.75rem; margin-bottom:14px; line-height:1.5; }
-.divider { border:none; border-top:1px solid var(--rim); margin:18px 0; }
-.file-status { display:flex; align-items:center; gap:10px; border-radius:10px; padding:11px 14px; margin-bottom:16px; font-size:0.8rem; }
-.file-status.loaded  { background:rgba(0,229,200,0.08); border:1px solid rgba(0,229,200,0.2); color:var(--glow); }
-.file-status.missing { background:rgba(255,179,71,0.08); border:1px solid rgba(255,179,71,0.2); color:var(--warn); }
-.file-status .fs-icon { font-size:1.1rem; }
-.file-status .fs-path { font-size:0.65rem; color:var(--muted); margin-top:2px; }
+/* ── Misc ── */
+.sub{color:var(--muted);font-size:0.75rem;margin-bottom:14px;line-height:1.5;}
+.divider{border:none;border-top:1px solid var(--rim);margin:18px 0;}
+#install-banner{display:none;align-items:center;gap:12px;background:linear-gradient(135deg,rgba(0,229,200,0.1),rgba(0,170,255,0.08));border:1px solid rgba(0,229,200,0.25);border-radius:14px;padding:14px 16px;margin-bottom:14px;}
+#install-banner .ib-icon{font-size:1.5rem;}
+#install-banner .ib-text{flex:1;font-size:0.82rem;}
+#install-banner .ib-sub{font-size:0.68rem;color:var(--muted);margin-top:2px;}
+#install-banner button{padding:9px 14px;white-space:nowrap;width:auto;font-size:0.78rem;border-radius:9px;}
+.user-card{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--rim);border-radius:12px;padding:14px;margin-bottom:16px;}
+.user-card img{width:44px;height:44px;border-radius:50%;border:2px solid var(--glow);}
+.user-card .uc-name{font-size:0.9rem;font-weight:500;}
+.user-card .uc-email{font-size:0.72rem;color:var(--muted);margin-top:2px;}
+.loading-overlay{position:fixed;inset:0;background:var(--deep);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:900;}
+.loading-overlay.hidden{display:none;}
+.spinner{width:40px;height:40px;border:3px solid var(--rim);border-top-color:var(--glow);border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-overlay p{color:var(--muted);font-size:0.85rem;}
 </style>
 </head>
 <body>
-<div id="app-shell">
 
-  <!-- Top bar -->
+<!-- Login screen -->
+<div id="login-screen">
+  <div class="login-logo">🐠</div>
+  <h1>AquaLog</h1>
+  <p>Sign in to sync your aquarium data across all your devices.</p>
+  <button class="google-btn" onclick="signInWithGoogle()">
+    <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+    Sign in with Google
+  </button>
+  <div class="login-status" id="login-status"></div>
+</div>
+
+<!-- Loading overlay -->
+<div class="loading-overlay" id="loading-overlay">
+  <div class="spinner"></div>
+  <p>Loading your aquarium data…</p>
+</div>
+
+<!-- Sync indicator -->
+<div id="sync-indicator"><div class="sync-dot" id="sync-dot"></div><span id="sync-text"></span></div>
+
+<!-- Main app -->
+<div id="app-shell">
   <div class="top-bar">
     <div class="logo-icon">🐠</div>
     <div>
@@ -431,207 +291,124 @@ body {
       <div class="tank-sub" id="tank-label">Aquarium Tracker</div>
     </div>
     <div class="top-bar-right">
-      <button class="icon-btn notif-dot" id="notif-btn" onclick="handleNotifBtn()" title="Notifications">🔔</button>
+      <button class="icon-btn" id="notif-btn" onclick="handleNotifBtn()" title="Notifications">🔔</button>
+      <img id="user-avatar" class="user-avatar" src="" alt="User" onclick="switchPage(document.querySelector('[data-page=settings]'))" style="display:none">
     </div>
   </div>
 
-  <!-- Scrollable content -->
   <div id="page-content">
     <div id="alert-box"></div>
 
-    <!-- ═══ DASHBOARD ═══ -->
+    <!-- DASHBOARD -->
     <div id="page-dashboard" class="page active">
       <div id="install-banner">
         <div class="ib-icon">📱</div>
-        <div>
-          <div class="ib-text">Install AquaLog on your home screen</div>
-          <div class="ib-sub">Get push notifications for reminders</div>
-        </div>
+        <div><div class="ib-text">Install AquaLog on your home screen</div><div class="ib-sub">Get push notifications for reminders</div></div>
         <button class="btn btn-primary btn-sm" onclick="triggerInstall()">Install</button>
       </div>
       <div id="dash-wc-banner"></div>
       <div id="dash-reminders"></div>
       <div id="dash-fish"></div>
       <div id="dash-params"></div>
-      <div class="card">
-        <h2>📋 Recent Activity</h2>
-        <div id="dash-activity"></div>
-      </div>
+      <div class="card"><h2>📋 Recent Activity</h2><div id="dash-activity"></div></div>
     </div>
 
-    <!-- ═══ QUICK LOG ═══ -->
+    <!-- LOG -->
     <div id="page-log" class="page">
       <div class="card">
         <h2>📓 Add Log Entry</h2>
         <div class="cat-grid" id="cat-grid"></div>
-        <div class="form-group">
-          <label>Date</label>
-          <input type="date" id="log-date">
-        </div>
-        <div class="form-group" id="log-subject-wrap" style="display:none">
-          <label id="log-subject-label">Subject</label>
-          <input type="text" id="log-subject">
-        </div>
+        <div class="form-group"><label>Date</label><input type="date" id="log-date"></div>
+        <div class="form-group" id="log-subject-wrap" style="display:none"><label id="log-subject-label">Subject</label><input type="text" id="log-subject"></div>
         <div class="form-row" id="log-extra-row" style="display:none">
-          <div class="form-group" id="log-qty-wrap" style="display:none">
-            <label>Quantity</label>
-            <input type="number" id="log-qty" min="1" placeholder="1">
-          </div>
-          <div class="form-group" id="log-amount-wrap" style="display:none">
-            <label>Amount / Dose</label>
-            <input type="text" id="log-amount" placeholder="e.g. 5 ml">
-          </div>
+          <div class="form-group" id="log-qty-wrap" style="display:none"><label>Quantity</label><input type="number" id="log-qty" min="1" placeholder="1"></div>
+          <div class="form-group" id="log-amount-wrap" style="display:none"><label>Amount / Dose</label><input type="text" id="log-amount" placeholder="e.g. 5 ml"></div>
         </div>
-        <div class="form-group">
-          <label>Notes</label>
-          <textarea id="log-notes" placeholder="Additional details…"></textarea>
-        </div>
+        <div class="form-group"><label>Notes</label><textarea id="log-notes" placeholder="Additional details…"></textarea></div>
         <button class="btn btn-primary" onclick="saveLogEntry()">💾 Save Entry</button>
         <button class="btn btn-secondary" onclick="clearLogForm()">Clear</button>
       </div>
-
-      <!-- Water change quick-log -->
       <div class="card">
         <h2>💧 Log Water Change</h2>
-        <div class="form-group">
-          <label>Date</label>
-          <input type="date" id="wc-date">
-        </div>
+        <div class="form-group"><label>Date</label><input type="date" id="wc-date"></div>
         <div class="form-row">
-          <div class="form-group">
-            <label>% Changed</label>
-            <input type="number" id="wc-percent" placeholder="e.g. 25" min="1" max="100">
-          </div>
-          <div class="form-group">
-            <label>Litres</label>
-            <input type="number" id="wc-litres" placeholder="e.g. 40" min="0">
-          </div>
+          <div class="form-group"><label>% Changed</label><input type="number" id="wc-percent" placeholder="e.g. 25" min="1" max="100"></div>
+          <div class="form-group"><label>Litres</label><input type="number" id="wc-litres" placeholder="e.g. 40" min="0"></div>
         </div>
-        <div class="form-group">
-          <label>Treatment</label>
-          <input type="text" id="wc-treatment" placeholder="e.g. Seachem Prime">
-        </div>
-        <div class="form-group">
-          <label>Notes</label>
-          <textarea id="wc-notes" placeholder="Observations…" style="min-height:60px"></textarea>
-        </div>
+        <div class="form-group"><label>Treatment</label><input type="text" id="wc-treatment" placeholder="e.g. Seachem Prime"></div>
+        <div class="form-group"><label>Notes</label><textarea id="wc-notes" placeholder="Observations…" style="min-height:60px"></textarea></div>
         <button class="btn btn-primary" onclick="saveWaterChange()">💾 Save Water Change</button>
       </div>
-
-      <!-- Water test quick-log -->
       <div class="card">
         <h2>🧪 Log Water Test</h2>
-        <p class="sub">Leave blank if not tested. Tap indicator to see range status.</p>
-        <div class="form-group">
-          <label>Date &amp; Time</label>
-          <input type="datetime-local" id="param-date">
-        </div>
+        <p class="sub">Leave blank if not tested.</p>
+        <div class="form-group"><label>Date &amp; Time</label><input type="datetime-local" id="param-date"></div>
         <div id="param-form-fields"></div>
-        <div class="result-summary" id="result-summary">
-          <h4>📊 Results vs Target Ranges</h4>
-          <div id="result-summary-rows"></div>
-        </div>
-        <div class="form-group" style="margin-top:4px">
-          <label>Notes</label>
-          <textarea id="param-notes" placeholder="Clarity, algae, behaviour…" style="min-height:60px"></textarea>
-        </div>
+        <div class="result-summary" id="result-summary"><h4>📊 Results vs Target Ranges</h4><div id="result-summary-rows"></div></div>
+        <div class="form-group" style="margin-top:4px"><label>Notes</label><textarea id="param-notes" placeholder="Clarity, algae, behaviour…" style="min-height:60px"></textarea></div>
         <button class="btn btn-primary" onclick="saveParams()">💾 Save Test Results</button>
       </div>
     </div>
 
-    <!-- ═══ HISTORY ═══ -->
+    <!-- HISTORY -->
     <div id="page-history" class="page">
-      <div class="card">
-        <h2>📜 Tank Log</h2>
-        <div class="filter-scroll"><div class="filter-bar" id="log-filter-bar"></div></div>
-        <div id="log-timeline"></div>
-      </div>
+      <div class="card"><h2>📜 Tank Log</h2><div class="filter-scroll"><div class="filter-bar" id="log-filter-bar"></div></div><div id="log-timeline"></div></div>
       <div class="card">
         <h2>📈 Parameter Trends</h2>
         <div class="chart-controls">
           <div class="param-toggles" id="param-toggles"></div>
           <select id="chart-range" onchange="renderChart()" style="background:var(--surface);border:1px solid var(--rim);color:var(--text);border-radius:7px;padding:6px 10px;font-size:0.75rem;min-width:110px">
-            <option value="30">30 days</option>
-            <option value="90">90 days</option>
-            <option value="0">All time</option>
+            <option value="30">30 days</option><option value="90">90 days</option><option value="0">All time</option>
           </select>
         </div>
         <div class="chart-wrap"><canvas id="paramChart"></canvas></div>
       </div>
-      <div class="card">
-        <h2>🗂 Full History</h2>
-        <div id="full-history"></div>
-      </div>
+      <div class="card"><h2>🗂 Full History</h2><div id="full-history"></div></div>
     </div>
 
-    <!-- ═══ SETTINGS ═══ -->
+    <!-- SETTINGS -->
     <div id="page-settings" class="page">
+      <div class="card">
+        <h2>👤 Account</h2>
+        <div class="user-card" id="user-card">
+          <img id="settings-avatar" src="" alt="">
+          <div><div class="uc-name" id="settings-name"></div><div class="uc-email" id="settings-email"></div></div>
+        </div>
+        <button class="btn btn-danger" onclick="signOutUser()">Sign Out</button>
+      </div>
 
-      <!-- Notifications -->
       <div class="card">
         <h2>🔔 Notifications</h2>
-        <p class="sub" id="notif-status-text">Enable push notifications to get reminders when it's time to change water, dose fertiliser, or clean your filter.</p>
+        <p class="sub" id="notif-status-text">Enable push notifications to get reminders.</p>
         <button class="btn btn-primary" id="notif-enable-btn" onclick="requestNotifPermission()">Enable Push Notifications</button>
-
         <div class="notif-panel" id="notif-settings-panel" style="display:none">
-          <div class="notif-row">
-            <div>
-              <div class="nr-label">💧 Water Change</div>
-              <div class="nr-sub" id="nr-wc-sub">Every 7 days</div>
-            </div>
-            <label class="toggle"><input type="checkbox" id="nt-wc" checked onchange="saveNotifPrefs()"><span class="toggle-slider"></span></label>
-          </div>
-          <div class="notif-row">
-            <div>
-              <div class="nr-label">🌱 Fertiliser Dose</div>
-              <div class="nr-sub" id="nr-fert-sub">Every 7 days</div>
-            </div>
-            <label class="toggle"><input type="checkbox" id="nt-fert" checked onchange="saveNotifPrefs()"><span class="toggle-slider"></span></label>
-          </div>
-          <div class="notif-row">
-            <div>
-              <div class="nr-label">⚙️ Filter / Media</div>
-              <div class="nr-sub" id="nr-filter-sub">Every 30 days</div>
-            </div>
-            <label class="toggle"><input type="checkbox" id="nt-filter" checked onchange="saveNotifPrefs()"><span class="toggle-slider"></span></label>
-          </div>
+          <div class="notif-row"><div><div class="nr-label">💧 Water Change</div><div class="nr-sub" id="nr-wc-sub">Every 7 days</div></div><label class="toggle"><input type="checkbox" id="nt-wc" checked onchange="saveNotifPrefs()"><span class="toggle-slider"></span></label></div>
+          <div class="notif-row"><div><div class="nr-label">🌱 Fertiliser Dose</div><div class="nr-sub" id="nr-fert-sub">Every 7 days</div></div><label class="toggle"><input type="checkbox" id="nt-fert" checked onchange="saveNotifPrefs()"><span class="toggle-slider"></span></label></div>
+          <div class="notif-row"><div><div class="nr-label">⚙️ Filter / Media</div><div class="nr-sub" id="nr-filter-sub">Every 30 days</div></div><label class="toggle"><input type="checkbox" id="nt-filter" checked onchange="saveNotifPrefs()"><span class="toggle-slider"></span></label></div>
         </div>
         <button class="btn btn-secondary btn-sm" id="test-notif-btn" style="display:none;margin-top:8px" onclick="sendTestNotification()">Send Test Notification</button>
       </div>
 
-      <!-- Tank info -->
       <div class="card">
-        <h2>⚙️ Settings</h2>
-        <p class="sub">Settings saved to <strong>settings.json</strong> — portable across devices on the same folder/drive.</p>
-        <div class="file-status missing" id="file-status-banner">
-          <span class="fs-icon">📄</span>
-          <div>
-            <div>settings.json not linked</div>
-            <div class="fs-path">Tap "Link settings.json" to connect. Once per browser session.</div>
-          </div>
-        </div>
-        <button class="btn btn-secondary" onclick="linkSettingsFile()" style="margin-bottom:10px">📂 Link settings.json</button>
-        <button class="btn btn-primary" onclick="saveSettings()" id="btn-save-settings" disabled>💾 Save Settings</button>
-
-        <hr class="divider">
+        <h2>⚙️ Tank Settings</h2>
+        <p class="sub">Saved to the cloud — same on every device.</p>
         <h3>🐠 Tank Information</h3>
         <div class="form-group"><label>Tank Name</label><input type="text" id="set-name" placeholder="e.g. Living Room 200L"></div>
         <div class="form-row">
-          <div class="form-group"><label>Volume (Litres)</label><input type="number" id="set-vol" placeholder="200"></div>
+          <div class="form-group"><label>Volume (L)</label><input type="number" id="set-vol" placeholder="200"></div>
           <div class="form-group"><label>Water Change (days)</label><input type="number" id="set-freq" value="7"></div>
         </div>
         <div class="form-row">
           <div class="form-group"><label>Fertiliser (days)</label><input type="number" id="set-fertiliser-freq" value="7"></div>
           <div class="form-group"><label>Filter Clean (days)</label><input type="number" id="set-filter-freq" value="30"></div>
         </div>
-
         <hr class="divider">
         <h3>🧪 Target Parameter Ranges</h3>
-        <p class="sub">Set acceptable min/max for each parameter.</p>
+        <p class="sub">Set your acceptable min/max for each parameter.</p>
         <div id="ranges-grid"></div>
+        <button class="btn btn-primary" onclick="saveSettings()">💾 Save Settings</button>
       </div>
 
-      <!-- Data -->
       <div class="card">
         <h2>💾 Data</h2>
         <button class="btn btn-secondary" onclick="exportData()" style="margin-bottom:10px">⬇ Export JSON Backup</button>
@@ -641,423 +418,267 @@ body {
 
   </div><!-- /page-content -->
 
-  <!-- Bottom nav -->
   <nav class="bottom-nav">
-    <button class="nav-item active" data-page="dashboard" onclick="switchPage(this)">
-      <span class="ni-icon">🏠</span><span>Home</span>
-    </button>
-    <button class="nav-item" data-page="log" onclick="switchPage(this)">
-      <span class="ni-icon">➕</span><span>Log</span>
-    </button>
-    <button class="nav-item" data-page="history" onclick="switchPage(this)">
-      <span class="ni-icon">📜</span><span>History</span>
-    </button>
-    <button class="nav-item" data-page="settings" onclick="switchPage(this)">
-      <span class="ni-icon">⚙️</span><span>Settings</span>
-    </button>
+    <button class="nav-item active" data-page="dashboard" onclick="switchPage(this)"><span class="ni-icon">🏠</span><span>Home</span></button>
+    <button class="nav-item" data-page="log" onclick="switchPage(this)"><span class="ni-icon">➕</span><span>Log</span></button>
+    <button class="nav-item" data-page="history" onclick="switchPage(this)"><span class="ni-icon">📜</span><span>History</span></button>
+    <button class="nav-item" data-page="settings" onclick="switchPage(this)"><span class="ni-icon">⚙️</span><span>Settings</span></button>
   </nav>
+</div>
 
-</div><!-- /app-shell -->
-
-<script>
-'use strict';
+<script type="module">
 // ═══════════════════════════════════════════════════════════════
-// SERVICE WORKER & PWA
+// FIREBASE
 // ═══════════════════════════════════════════════════════════════
-let deferredInstallPrompt = null;
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, collection, addDoc, setDoc, deleteDoc,
+         onSnapshot, query, orderBy, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').then(reg => {
-      console.log('SW registered:', reg.scope);
-    }).catch(err => console.warn('SW registration failed:', err));
+const firebaseConfig = {
+  apiKey: "AIzaSyB6-L7hOhkKuZUZD4c7vCbtP9s0p5AnCdQ",
+  authDomain: "aquariumlogs-1cfe8.firebaseapp.com",
+  projectId: "aquariumlogs-1cfe8",
+  storageBucket: "aquariumlogs-1cfe8.firebasestorage.app",
+  messagingSenderId: "859687422495",
+  appId: "1:859687422495:web:66ff8d0d9e85d6b431a32a"
+};
+
+const fbApp  = initializeApp(firebaseConfig);
+const auth   = getAuth(fbApp);
+const db     = getFirestore(fbApp);
+
+let currentUser = null;
+let unsubscribers = [];
+
+// ─── Auth ──────────────────────────────────────────────────────
+window.signInWithGoogle = async () => {
+  document.getElementById('login-status').textContent = 'Signing in…';
+  try {
+    const provider = new GoogleAuthProvider();
+    await signInWithPopup(auth, provider);
+  } catch(e) {
+    document.getElementById('login-status').textContent = 'Sign-in failed: ' + e.message;
+  }
+};
+
+window.signOutUser = async () => {
+  if (!confirm('Sign out of AquaLog?')) return;
+  unsubscribers.forEach(u => u());
+  unsubscribers = [];
+  waterChanges = []; paramLogs = []; tankLog = [];
+  await signOut(auth);
+};
+
+onAuthStateChanged(auth, async user => {
+  if (user) {
+    currentUser = user;
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('loading-overlay').classList.remove('hidden');
+    setupUserUI(user);
+    await subscribeToData(user.uid);
+    document.getElementById('loading-overlay').classList.add('hidden');
+    buildParamForm();
+    renderCatGrid();
+    selectCat(selectedCat);
+    renderDashboard();
+    scheduleLocalReminders();
+  } else {
+    currentUser = null;
+    document.getElementById('login-screen').classList.remove('hidden');
+    document.getElementById('loading-overlay').classList.add('hidden');
+  }
+});
+
+function setupUserUI(user) {
+  const av = document.getElementById('user-avatar');
+  if (user.photoURL) { av.src = user.photoURL; av.style.display = 'block'; }
+  document.getElementById('settings-avatar').src   = user.photoURL || '';
+  document.getElementById('settings-name').textContent  = user.displayName || 'User';
+  document.getElementById('settings-email').textContent = user.email || '';
+}
+
+// ─── Firestore paths ───────────────────────────────────────────
+const userDoc  = uid => doc(db, 'users', uid);
+const col      = (uid, name) => collection(db, 'users', uid, name);
+
+// ─── Real-time subscriptions ───────────────────────────────────
+async function subscribeToData(uid) {
+  return new Promise(resolve => {
+    let loaded = 0;
+    const check = () => { if (++loaded >= 4) resolve(); };
+
+    // Settings
+    unsubscribers.push(onSnapshot(userDoc(uid), snap => {
+      if (snap.exists()) { mergeSettings(snap.data()); applyTankLabel(); }
+      check();
+    }));
+
+    // Water changes
+    unsubscribers.push(onSnapshot(query(col(uid,'waterChanges'), orderBy('date','desc')), snap => {
+      waterChanges = snap.docs.map(d => ({...d.data(), _fid: d.id}));
+      refreshUI(); check();
+    }));
+
+    // Param logs
+    unsubscribers.push(onSnapshot(query(col(uid,'paramLogs'), orderBy('date','desc')), snap => {
+      paramLogs = snap.docs.map(d => ({...d.data(), _fid: d.id}));
+      refreshUI(); check();
+    }));
+
+    // Tank log
+    unsubscribers.push(onSnapshot(query(col(uid,'tankLog'), orderBy('date','desc')), snap => {
+      tankLog = snap.docs.map(d => ({...d.data(), _fid: d.id}));
+      refreshUI(); check();
+    }));
   });
 }
 
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredInstallPrompt = e;
-  document.getElementById('install-banner').style.display = 'flex';
-});
+function refreshUI() {
+  // Only refresh whichever page is visible
+  const active = document.querySelector('.page.active');
+  if (!active) return;
+  const id = active.id.replace('page-','');
+  if (id==='dashboard') renderDashboard();
+  if (id==='history')   { renderLogTimeline(); renderLogFilterBar(); renderFullHistory(); renderChart(); }
+}
 
-window.addEventListener('appinstalled', () => {
-  document.getElementById('install-banner').style.display = 'none';
-  deferredInstallPrompt = null;
-  toast('AquaLog installed! 🎉');
-});
+// ─── Sync helpers ──────────────────────────────────────────────
+function showSync(state, msg) {
+  const el=document.getElementById('sync-indicator');
+  const dot=document.getElementById('sync-dot');
+  const txt=document.getElementById('sync-text');
+  el.className='sync-indicator visible '+state;
+  dot.className='sync-dot'+(state==='syncing'?' pulse':'');
+  txt.textContent=msg;
+  if (state!=='syncing') setTimeout(()=>el.classList.remove('visible'),2500);
+}
 
-function triggerInstall() {
-  if (!deferredInstallPrompt) { toast('Open this page in Chrome/Safari and use "Add to Home Screen"','wrn'); return; }
-  deferredInstallPrompt.prompt();
-  deferredInstallPrompt.userChoice.then(r => {
-    if (r.outcome === 'accepted') toast('Installing AquaLog…');
-    deferredInstallPrompt = null;
-  });
+async function addToCol(colName, data) {
+  if (!currentUser) return;
+  showSync('syncing','Saving…');
+  try {
+    const ref = await addDoc(col(currentUser.uid, colName), {...data, _ts: serverTimestamp()});
+    showSync('synced','Saved ✓');
+    return ref.id;
+  } catch(e) { showSync('error','Save failed'); toast('Save failed: '+e.message,'err'); throw e; }
+}
+
+async function delFromCol(colName, fid) {
+  if (!currentUser || !fid) return;
+  showSync('syncing','Deleting…');
+  try {
+    await deleteDoc(doc(db,'users',currentUser.uid,colName,fid));
+    showSync('synced','Deleted ✓');
+  } catch(e) { showSync('error','Delete failed'); toast('Delete failed: '+e.message,'err'); throw e; }
+}
+
+async function saveSettingsToFirestore() {
+  if (!currentUser) return;
+  showSync('syncing','Saving…');
+  try {
+    await setDoc(userDoc(currentUser.uid), settings, {merge:true});
+    showSync('synced','Saved ✓');
+  } catch(e) { showSync('error','Save failed'); toast('Save failed: '+e.message,'err'); }
 }
 
 // ═══════════════════════════════════════════════════════════════
-// STORAGE — localStorage for logs, settings.json for config
+// DATA
 // ═══════════════════════════════════════════════════════════════
-const KEY_WC       = 'aqualog_waterchanges';
-const KEY_PARAMS   = 'aqualog_params';
-const KEY_LOG      = 'aqualog_tanklog';
-const KEY_NOTIF    = 'aqualog_notifprefs';
+let waterChanges = [], paramLogs = [], tankLog = [];
 
-const loadLS    = k => { try{return JSON.parse(localStorage.getItem(k)||'[]');}catch{return[];} };
-const loadLSObj = k => { try{return JSON.parse(localStorage.getItem(k)||'{}');}catch{return{};} };
-const saveLS    = (k,v) => localStorage.setItem(k, JSON.stringify(v));
-
-let waterChanges = loadLS(KEY_WC);
-let paramLogs    = loadLS(KEY_PARAMS);
-let tankLog      = loadLS(KEY_LOG);
-let notifPrefs   = loadLSObj(KEY_NOTIF);
-
-// ── Settings ──────────────────────────────────────────────────
+// ─── Settings ──────────────────────────────────────────────────
 const DEFAULT_SETTINGS = {
   tankName:'', tankVol:'', changeFreq:7, fertiliserFreq:7, filterFreq:30,
   ranges:{
-    ph:      {min:6.5,max:7.5},
-    ammonia: {min:0,  max:0.25},
-    nitrite: {min:0,  max:0.25},
-    nitrate: {min:0,  max:40},
-    gh:      {min:4,  max:12},
-    kh:      {min:3,  max:8},
-    temp:    {min:24, max:27},
-    tds:     {min:100,max:300},
+    ph:{min:6.5,max:7.5}, ammonia:{min:0,max:0.25}, nitrite:{min:0,max:0.25},
+    nitrate:{min:0,max:40}, gh:{min:4,max:12}, kh:{min:3,max:8},
+    temp:{min:24,max:27}, tds:{min:100,max:300}
   }
 };
 let settings = JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
-let settingsFileHandle = null;
 
-async function tryFetchSettings() {
-  try {
-    const r = await fetch('./settings.json?' + Date.now());
-    if (!r.ok) return false;
-    mergeSettings(await r.json());
-    return true;
-  } catch { return false; }
-}
 function mergeSettings(data) {
   ['tankName','tankVol','changeFreq','fertiliserFreq','filterFreq'].forEach(k => {
     if (data[k] !== undefined) settings[k] = data[k];
   });
   if (data.ranges) Object.keys(DEFAULT_SETTINGS.ranges).forEach(k => {
-    if (data.ranges[k]) settings.ranges[k] = {...DEFAULT_SETTINGS.ranges[k],...data.ranges[k]};
+    if (data.ranges && data.ranges[k]) settings.ranges[k] = {...DEFAULT_SETTINGS.ranges[k], ...data.ranges[k]};
   });
 }
 
-async function linkSettingsFile() {
-  if (!window.showOpenFilePicker) { toast('Use Chrome/Edge for file linking','wrn'); return; }
-  try {
-    const [fh] = await window.showOpenFilePicker({types:[{description:'JSON',accept:{'application/json':['.json']}}]});
-    settingsFileHandle = fh;
-    mergeSettings(JSON.parse(await (await fh.getFile()).text()));
-    toast('settings.json linked ✓');
-    updateFSBanner(true, fh.name);
-    document.getElementById('btn-save-settings').disabled = false;
-    populateSettingsForm();
-    applyTankLabel();
-  } catch(e) { if (e.name!=='AbortError') toast('Could not open: '+e.message,'err'); }
-}
-
-async function saveSettings() {
-  settings.tankName        = document.getElementById('set-name').value.trim();
-  settings.tankVol         = document.getElementById('set-vol').value;
-  settings.changeFreq      = parseInt(document.getElementById('set-freq').value)||7;
-  settings.fertiliserFreq  = parseInt(document.getElementById('set-fertiliser-freq').value)||7;
-  settings.filterFreq      = parseInt(document.getElementById('set-filter-freq').value)||30;
+window.saveSettings = async () => {
+  settings.tankName       = document.getElementById('set-name').value.trim();
+  settings.tankVol        = document.getElementById('set-vol').value;
+  settings.changeFreq     = parseInt(document.getElementById('set-freq').value)||7;
+  settings.fertiliserFreq = parseInt(document.getElementById('set-fertiliser-freq').value)||7;
+  settings.filterFreq     = parseInt(document.getElementById('set-filter-freq').value)||30;
   PARAMS.forEach(p => {
-    const mn=document.getElementById('range-min-'+p.key), mx=document.getElementById('range-max-'+p.key);
-    if (mn&&mx) settings.ranges[p.key]={min:mn.value!==''?parseFloat(mn.value):DEFAULT_SETTINGS.ranges[p.key].min,max:mx.value!==''?parseFloat(mx.value):DEFAULT_SETTINGS.ranges[p.key].max};
-  });
-  if (!settingsFileHandle && window.showSaveFilePicker) {
-    try {
-      settingsFileHandle = await window.showSaveFilePicker({suggestedName:'settings.json',types:[{description:'JSON',accept:{'application/json':['.json']}}]});
-      updateFSBanner(true, settingsFileHandle.name);
-      document.getElementById('btn-save-settings').disabled=false;
-    } catch(e) { if (e.name!=='AbortError') toast('Cancelled','wrn'); return; }
-  } else if (!settingsFileHandle) { toast('Link settings.json first','err'); return; }
-  try {
-    const w = await settingsFileHandle.createWritable();
-    await w.write(JSON.stringify(settings,null,2)); await w.close();
-    toast('Settings saved ✓'); applyTankLabel(); buildParamForm(); scheduleLocalReminders(); renderDashboard();
-  } catch(e) { toast('Save failed: '+e.message,'err'); }
-}
-
-function updateFSBanner(linked, name) {
-  const el = document.getElementById('file-status-banner');
-  if (linked) {
-    el.className='file-status loaded';
-    el.innerHTML=`<span class="fs-icon">✅</span><div><div>settings.json linked</div><div class="fs-path">${name||'settings.json'}</div></div>`;
-  } else {
-    el.className='file-status missing';
-    el.innerHTML=`<span class="fs-icon">📄</span><div><div>Not linked</div><div class="fs-path">Tap "Link settings.json" to connect.</div></div>`;
-  }
-}
-
-// ═══════════════════════════════════════════════════════════════
-// PUSH NOTIFICATIONS
-// ═══════════════════════════════════════════════════════════════
-let notifPermission = 'default';
-
-async function requestNotifPermission() {
-  if (!('Notification' in window)) { toast('Notifications not supported in this browser','wrn'); return; }
-  const perm = await Notification.requestPermission();
-  notifPermission = perm;
-  updateNotifUI();
-  if (perm === 'granted') {
-    toast('Notifications enabled! 🔔');
-    scheduleLocalReminders();
-  } else {
-    toast('Notification permission denied','wrn');
-  }
-}
-
-function updateNotifUI() {
-  const perm = Notification.permission || 'default';
-  notifPermission = perm;
-  const btn    = document.getElementById('notif-enable-btn');
-  const panel  = document.getElementById('notif-settings-panel');
-  const testBtn= document.getElementById('test-notif-btn');
-  const status = document.getElementById('notif-status-text');
-  const notifBtnDot = document.getElementById('notif-btn');
-
-  if (perm === 'granted') {
-    btn.style.display    = 'none';
-    panel.style.display  = 'block';
-    testBtn.style.display= 'inline-block';
-    status.textContent   = 'Push notifications are enabled. Toggle reminders below.';
-    notifBtnDot.classList.remove('has-alerts');
-  } else if (perm === 'denied') {
-    btn.textContent = 'Notifications Blocked — Enable in Browser Settings';
-    btn.disabled    = true;
-    status.textContent = 'Notifications are blocked. Go to your browser/phone settings to allow them for this site.';
-  } else {
-    btn.style.display   = 'block';
-    panel.style.display = 'none';
-    status.textContent  = 'Enable push notifications to get reminders when it\'s time to change water, dose fertiliser, or clean your filter.';
-  }
-
-  // Update reminder sub-labels
-  document.getElementById('nr-wc-sub').textContent     = `Every ${settings.changeFreq||7} days`;
-  document.getElementById('nr-fert-sub').textContent   = `Every ${settings.fertiliserFreq||7} days`;
-  document.getElementById('nr-filter-sub').textContent = `Every ${settings.filterFreq||30} days`;
-}
-
-function saveNotifPrefs() {
-  notifPrefs = {
-    wc:     document.getElementById('nt-wc')?.checked    ?? true,
-    fert:   document.getElementById('nt-fert')?.checked  ?? true,
-    filter: document.getElementById('nt-filter')?.checked ?? true,
-  };
-  saveLS(KEY_NOTIF, notifPrefs);
-  scheduleLocalReminders();
-}
-
-// Local notifications via setTimeout (works while app is open)
-// and service worker periodic sync (background)
-let reminderTimers = [];
-function scheduleLocalReminders() {
-  reminderTimers.forEach(t => clearTimeout(t));
-  reminderTimers = [];
-  if (Notification.permission !== 'granted') return;
-
-  const prefs = { wc: notifPrefs.wc!==false, fert: notifPrefs.fert!==false, filter: notifPrefs.filter!==false };
-  const today = new Date(); today.setHours(0,0,0,0);
-
-  function schedule(icon, title, body, lastDate, freqDays, enabled) {
-    if (!enabled || !freqDays) return;
-    let nextMs;
-    if (lastDate) {
-      const next = new Date(lastDate.getTime() + freqDays*86400000);
-      nextMs = next.getTime() - Date.now();
-    } else {
-      nextMs = freqDays * 86400000; // first reminder in N days if never done
-    }
-    if (nextMs < 0) {
-      // Already overdue — show now (with small delay to not spam on startup)
-      const t = setTimeout(() => showLocalNotif(title, body), 3000);
-      reminderTimers.push(t);
-    } else {
-      const t = setTimeout(() => showLocalNotif(title, body), nextMs);
-      reminderTimers.push(t);
-    }
-  }
-
-  const lastWC      = waterChanges[0] ? new Date(waterChanges[0].date+'T00:00:00') : null;
-  const lastFert    = tankLog.find(e=>e.cat==='fertiliser') ? new Date(tankLog.find(e=>e.cat==='fertiliser').date+'T00:00:00') : null;
-  const lastFilter  = tankLog.find(e=>e.cat==='filter'||e.cat==='media') ? new Date(tankLog.find(e=>e.cat==='filter'||e.cat==='media').date+'T00:00:00') : null;
-
-  schedule('💧','💧 Water Change Due',`Time for your ${settings.changeFreq||7}-day water change!`, lastWC, settings.changeFreq||7, prefs.wc);
-  schedule('🌱','🌱 Fertiliser Due',`Time to dose your fertiliser (every ${settings.fertiliserFreq||7} days).`, lastFert, settings.fertiliserFreq||7, prefs.fert);
-  schedule('⚙️','⚙️ Filter Maintenance Due',`Time to clean/check filter media (every ${settings.filterFreq||30} days).`, lastFilter, settings.filterFreq||30, prefs.filter);
-
-  // Store reminder state in IndexedDB for service worker
-  storeRemindersForSW([
-    {id:'wc',     enabled:prefs.wc,     message:`Time for your water change!`,    nextDue: calcNextDue(lastWC,    settings.changeFreq||7)},
-    {id:'fert',   enabled:prefs.fert,   message:`Time to dose fertiliser!`,        nextDue: calcNextDue(lastFert,  settings.fertiliserFreq||7)},
-    {id:'filter', enabled:prefs.filter, message:`Time to clean your filter media!`,nextDue: calcNextDue(lastFilter,settings.filterFreq||30)},
-  ]);
-}
-
-function calcNextDue(lastDate, freqDays) {
-  if (!lastDate) return new Date(Date.now() + freqDays*86400000).toISOString();
-  return new Date(lastDate.getTime() + freqDays*86400000).toISOString();
-}
-
-function showLocalNotif(title, body) {
-  if (Notification.permission !== 'granted') return;
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.ready.then(reg => {
-      reg.showNotification(title, { body, icon:'./icons/icon-192.png', badge:'./icons/icon-192.png', tag:title });
-    });
-  } else {
-    new Notification(title, { body, icon:'./icons/icon-192.png' });
-  }
-}
-
-function sendTestNotification() {
-  showLocalNotif('🐠 AquaLog Test', 'Your reminders are working correctly!');
-  toast('Test notification sent!');
-}
-
-function handleNotifBtn() {
-  switchPage(document.querySelector('[data-page="settings"]'));
-}
-
-async function storeRemindersForSW(reminders) {
-  try {
-    const db = await openIDB();
-    const tx = db.transaction('reminders','readwrite');
-    const store = tx.objectStore('reminders');
-    reminders.forEach(r => store.put(r));
-  } catch(e) { console.warn('IDB store error:', e); }
-}
-
-function openIDB() {
-  return new Promise((resolve, reject) => {
-    const req = indexedDB.open('aqualog', 1);
-    req.onsuccess = () => resolve(req.result);
-    req.onerror   = () => reject(req.error);
-    req.onupgradeneeded = e => {
-      const db = e.target.result;
-      if (!db.objectStoreNames.contains('reminders')) db.createObjectStore('reminders',{keyPath:'id'});
+    const mn=document.getElementById('range-min-'+p.key);
+    const mx=document.getElementById('range-max-'+p.key);
+    if (mn&&mx) settings.ranges[p.key]={
+      min:mn.value!==''?parseFloat(mn.value):DEFAULT_SETTINGS.ranges[p.key].min,
+      max:mx.value!==''?parseFloat(mx.value):DEFAULT_SETTINGS.ranges[p.key].max
     };
   });
-}
+  await saveSettingsToFirestore();
+  toast('Settings saved ✓');
+  applyTankLabel();
+  buildParamForm();
+  scheduleLocalReminders();
+  renderDashboard();
+};
 
-// Register periodic background sync if supported
-async function registerPeriodicSync() {
-  if ('serviceWorker' in navigator && 'periodicSync' in ServiceWorkerRegistration.prototype) {
-    try {
-      const reg = await navigator.serviceWorker.ready;
-      await reg.periodicSync.register('aqualog-reminders', { minInterval: 86400000 }); // once daily
-    } catch(e) { console.warn('Periodic sync not available:', e); }
-  }
-}
-
-// ═══════════════════════════════════════════════════════════════
-// PARAMS DEFINITION
-// ═══════════════════════════════════════════════════════════════
-const PARAMS = [
-  {key:'ph',      label:'pH',   unit:'',     color:'#00e5c8',icon:'⚗️',  criticalHigh:8.5,criticalLow:5.5},
-  {key:'ammonia', label:'NH₃',  unit:' ppm', color:'#ff5c6a',icon:'☠️',  criticalHigh:1,  criticalLow:null},
-  {key:'nitrite', label:'NO₂',  unit:' ppm', color:'#ff8c42',icon:'⚠️',  criticalHigh:0.5,criticalLow:null},
-  {key:'nitrate', label:'NO₃',  unit:' ppm', color:'#ffb347',icon:'🧫', criticalHigh:80, criticalLow:null},
-  {key:'gh',      label:'GH',   unit:'°dH',  color:'#00aaff',icon:'💧', criticalHigh:null,criticalLow:null},
-  {key:'kh',      label:'KH',   unit:'°dH',  color:'#7a8fff',icon:'🛡️', criticalHigh:null,criticalLow:null},
-  {key:'temp',    label:'Temp', unit:'°C',   color:'#f97ef6',icon:'🌡️', criticalHigh:32,  criticalLow:18},
-  {key:'tds',     label:'TDS',  unit:' ppm', color:'#a8d8a8',icon:'🔬', criticalHigh:null,criticalLow:null},
-];
-
-function evalParam(key, val) {
-  if (val===null||val===undefined||val==='') return null;
-  const r=settings.ranges[key], p=PARAMS.find(x=>x.key===key);
-  if (!r) return 'ok';
-  const v=parseFloat(val); if(isNaN(v)) return null;
-  if (p.criticalHigh!==null && v>=p.criticalHigh) return 'crit';
-  if (p.criticalLow !==null && v<=p.criticalLow)  return 'crit';
-  if (v<r.min) return 'lo';
-  if (v>r.max) return 'hi';
-  return 'ok';
-}
-function statusClass(s){if(!s)return'';if(s==='ok')return'good';if(s==='crit')return'bad';return'warn';}
-
-// ═══════════════════════════════════════════════════════════════
-// PAGE SWITCHING
-// ═══════════════════════════════════════════════════════════════
-function switchPage(btn) {
-  const id = btn.dataset.page;
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
-  btn.classList.add('active');
-  document.getElementById('page-content').scrollTop = 0;
-  if (id==='dashboard') renderDashboard();
-  if (id==='log')       { renderCatGrid(); buildParamForm(); }
-  if (id==='history')   { renderLogTimeline(); renderLogFilterBar(); renderFullHistory(); renderParamToggles(); renderChart(); }
-  if (id==='settings')  { populateSettingsForm(); buildRangesGrid(); updateNotifUI(); }
-}
-
-// ═══════════════════════════════════════════════════════════════
-// TOAST
-// ═══════════════════════════════════════════════════════════════
-function toast(msg, type='ok') {
-  const box=document.getElementById('alert-box');
-  const el=document.createElement('div');
-  el.className=`toast ${type}`;
-  el.innerHTML=(type==='ok'?'✅':type==='wrn'?'⚠️':'❌')+' '+msg;
-  box.appendChild(el);
-  setTimeout(()=>el.remove(), 3200);
-}
-
-// ═══════════════════════════════════════════════════════════════
-// WATER CHANGES
-// ═══════════════════════════════════════════════════════════════
-function saveWaterChange() {
+// ─── Water Changes ─────────────────────────────────────────────
+window.saveWaterChange = async () => {
   const date=document.getElementById('wc-date').value;
-  if (!date){toast('Please pick a date','err');return;}
-  waterChanges.unshift({
-    id:Date.now(), date,
-    percent:  pf('wc-percent'),
-    litres:   pf('wc-litres'),
+  if (!date){toast('Pick a date','err');return;}
+  await addToCol('waterChanges',{
+    date, percent:pf('wc-percent'), litres:pf('wc-litres'),
     treatment:document.getElementById('wc-treatment').value.trim(),
-    notes:    document.getElementById('wc-notes').value.trim(),
+    notes:document.getElementById('wc-notes').value.trim()
   });
-  saveLS(KEY_WC,waterChanges);
   toast('Water change saved! 💧');
   ['wc-percent','wc-litres','wc-treatment','wc-notes'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('wc-date').value=today();
   scheduleLocalReminders();
+};
+
+window.deleteWC = async fid => {
+  if (!confirm('Delete this record?')) return;
+  await delFromCol('waterChanges', fid);
+};
+
+// ─── Params ────────────────────────────────────────────────────
+const PARAMS=[
+  {key:'ph',     label:'pH',   unit:'',    color:'#00e5c8',icon:'⚗️', criticalHigh:8.5,criticalLow:5.5},
+  {key:'ammonia',label:'NH₃',  unit:' ppm',color:'#ff5c6a',icon:'☠️', criticalHigh:1,  criticalLow:null},
+  {key:'nitrite',label:'NO₂',  unit:' ppm',color:'#ff8c42',icon:'⚠️', criticalHigh:0.5,criticalLow:null},
+  {key:'nitrate',label:'NO₃',  unit:' ppm',color:'#ffb347',icon:'🧫',criticalHigh:80, criticalLow:null},
+  {key:'gh',     label:'GH',   unit:'°dH', color:'#00aaff',icon:'💧',criticalHigh:null,criticalLow:null},
+  {key:'kh',     label:'KH',   unit:'°dH', color:'#7a8fff',icon:'🛡️',criticalHigh:null,criticalLow:null},
+  {key:'temp',   label:'Temp', unit:'°C',  color:'#f97ef6',icon:'🌡️',criticalHigh:32, criticalLow:18},
+  {key:'tds',    label:'TDS',  unit:' ppm',color:'#a8d8a8',icon:'🔬',criticalHigh:null,criticalLow:null},
+];
+
+function evalParam(key,val){
+  if(val===null||val===undefined||val==='')return null;
+  const r=settings.ranges[key],p=PARAMS.find(x=>x.key===key);
+  if(!r)return'ok';const v=parseFloat(val);if(isNaN(v))return null;
+  if(p.criticalHigh!==null&&v>=p.criticalHigh)return'crit';
+  if(p.criticalLow !==null&&v<=p.criticalLow) return'crit';
+  if(v<r.min)return'lo';if(v>r.max)return'hi';return'ok';
 }
 
-function deleteWC(id) {
-  if(!confirm('Delete this record?'))return;
-  waterChanges=waterChanges.filter(e=>e.id!==id);
-  saveLS(KEY_WC,waterChanges);
-  renderFullHistory(); toast('Deleted');
-}
-
-// ═══════════════════════════════════════════════════════════════
-// PARAMETERS
-// ═══════════════════════════════════════════════════════════════
-let activeParams=new Set(['ph','ammonia','nitrite','nitrate','temp']);
-let chartInstance=null;
-
-function buildParamForm() {
-  const container=document.getElementById('param-form-fields');
-  if (!container) return;
-  container.innerHTML='';
-  // 2 per row
-  for (let i=0;i<PARAMS.length;i+=2) {
-    const row=document.createElement('div');
-    row.className='form-row';
+window.buildParamForm = () => {
+  const c=document.getElementById('param-form-fields');if(!c)return;c.innerHTML='';
+  for(let i=0;i<PARAMS.length;i+=2){
+    const row=document.createElement('div');row.className='form-row';
     [PARAMS[i],PARAMS[i+1]].filter(Boolean).forEach(p=>{
-      const r=settings.ranges[p.key];
-      const div=document.createElement('div');
-      div.className='form-group';
-      div.innerHTML=`
-        <label>${p.icon} ${p.label}${p.unit?' ('+p.unit.trim()+')':''}</label>
+      const r=settings.ranges[p.key];const div=document.createElement('div');div.className='form-group';
+      div.innerHTML=`<label>${p.icon} ${p.label}${p.unit?' ('+p.unit.trim()+')':''}</label>
         <div class="param-input-wrap">
           <input type="number" id="p-${p.key}" step="any" inputmode="decimal" placeholder="—" oninput="onParamInput('${p.key}')">
           <span class="param-indicator" id="ind-${p.key}"></span>
@@ -1065,12 +686,12 @@ function buildParamForm() {
         <div class="range-hint">Target: ${r.min}–${r.max}${p.unit}</div>`;
       row.appendChild(div);
     });
-    container.appendChild(row);
+    c.appendChild(row);
   }
-}
+};
 
-function onParamInput(key) {
-  const el=document.getElementById('p-'+key), ind=document.getElementById('ind-'+key);
+window.onParamInput = key => {
+  const el=document.getElementById('p-'+key),ind=document.getElementById('ind-'+key);
   const v=el.value;
   if(v===''){ind.className='param-indicator';ind.textContent='';updateResultSummary();return;}
   const s=evalParam(key,v);
@@ -1078,197 +699,192 @@ function onParamInput(key) {
   ind.textContent=s==='ok'?'✓':s==='hi'?'↑':s==='lo'?'↓':s==='crit'?'!!':'';
   el.style.borderColor=s==='ok'?'rgba(0,229,200,0.5)':s==='crit'?'rgba(255,92,106,0.6)':'rgba(255,179,71,0.5)';
   updateResultSummary();
-}
+};
 
-function updateResultSummary() {
-  const rows=[]; PARAMS.forEach(p=>{const v=document.getElementById('p-'+p.key)?.value;if(v!==''&&v!==undefined){const s=evalParam(p.key,v);if(s)rows.push({p,v,s});}});
-  const sumEl=document.getElementById('result-summary');
-  const rowEl=document.getElementById('result-summary-rows');
+function updateResultSummary(){
+  const rows=[];PARAMS.forEach(p=>{const v=document.getElementById('p-'+p.key)?.value;if(v!==''&&v!==undefined){const s=evalParam(p.key,v);if(s)rows.push({p,v,s});}});
+  const sumEl=document.getElementById('result-summary'),rowEl=document.getElementById('result-summary-rows');
   if(!rows.length){sumEl?.classList.remove('visible');return;}
   sumEl?.classList.add('visible');
   rowEl.innerHTML=rows.map(({p,v,s})=>{
     const sc=s==='ok'?'ok':s==='crit'?'crit':'warn';
     const label=s==='ok'?'OK':s==='hi'?'High':s==='lo'?'Low':'Critical!';
     const r=settings.ranges[p.key];
-    return `<div class="rs-row"><span class="rs-name">${p.label}</span><span class="rs-val" style="color:${s==='ok'?'var(--glow)':s==='crit'?'var(--danger)':'var(--warn)'}">${v}${p.unit}</span><span class="rs-range">${r.min}–${r.max}${p.unit}</span><span class="rs-status ${sc}">${label}</span></div>`;
+    return`<div class="rs-row"><span class="rs-name">${p.label}</span><span class="rs-val" style="color:${s==='ok'?'var(--glow)':s==='crit'?'var(--danger)':'var(--warn)'}">${v}${p.unit}</span><span class="rs-range">${r.min}–${r.max}${p.unit}</span><span class="rs-status ${sc}">${label}</span></div>`;
   }).join('');
 }
 
-function saveParams() {
+window.saveParams = async () => {
   const dt=document.getElementById('param-date').value;
   if(!dt){toast('Pick a date/time','err');return;}
-  const entry={id:Date.now(),date:dt,notes:document.getElementById('param-notes').value.trim()};
+  const entry={date:dt,notes:document.getElementById('param-notes').value.trim()};
   let filled=0;
   PARAMS.forEach(p=>{const v=document.getElementById('p-'+p.key)?.value;entry[p.key]=(v!==''&&v!==undefined)?parseFloat(v):null;if(v!==''&&v!==undefined)filled++;});
   if(!filled){toast('Enter at least one value','err');return;}
-  paramLogs.unshift(entry); saveLS(KEY_PARAMS,paramLogs);
-  toast('Test saved! 🧪'); clearParamForm();
-}
+  await addToCol('paramLogs',entry);
+  toast('Test saved! 🧪');
+  clearParamForm();
+};
 
-function clearParamForm() {
+window.clearParamForm = () => {
   document.getElementById('param-date').value=nowLocal();
   document.getElementById('param-notes').value='';
-  PARAMS.forEach(p=>{const el=document.getElementById('p-'+p.key);if(el){el.value='';el.style.borderColor='';} const ind=document.getElementById('ind-'+p.key);if(ind){ind.className='param-indicator';ind.textContent='';}});
+  PARAMS.forEach(p=>{const el=document.getElementById('p-'+p.key);if(el){el.value='';el.style.borderColor='';}const ind=document.getElementById('ind-'+p.key);if(ind){ind.className='param-indicator';ind.textContent='';}});
   document.getElementById('result-summary')?.classList.remove('visible');
-}
+};
 
-function deleteParam(id){if(!confirm('Delete?'))return;paramLogs=paramLogs.filter(e=>e.id!==id);saveLS(KEY_PARAMS,paramLogs);renderFullHistory();renderChart();toast('Deleted');}
+window.deleteParam = async fid => {
+  if(!confirm('Delete?'))return;await delFromCol('paramLogs',fid);
+};
 
-function renderParamToggles() {
+let activeParams=new Set(['ph','ammonia','nitrite','nitrate','temp']);
+let chartInstance=null;
+
+window.renderParamToggles = () => {
   document.getElementById('param-toggles').innerHTML=PARAMS.map(p=>`
-    <button class="param-toggle ${activeParams.has(p.key)?'on':''}" onclick="toggleParam('${p.key}')" style="${activeParams.has(p.key)?'border-color:'+p.color+';color:'+p.color:''}">${p.label}</button>`).join('');
-}
-function toggleParam(k){activeParams.has(k)?activeParams.delete(k):activeParams.add(k);renderParamToggles();renderChart();}
+    <button class="param-toggle ${activeParams.has(p.key)?'on':''}" onclick="toggleParam('${p.key}')"
+      style="${activeParams.has(p.key)?'border-color:'+p.color+';color:'+p.color:''}">${p.label}</button>`).join('');
+};
 
-function renderChart() {
+window.toggleParam = k=>{activeParams.has(k)?activeParams.delete(k):activeParams.add(k);renderParamToggles();renderChart();};
+
+window.renderChart = () => {
   const days=parseInt(document.getElementById('chart-range')?.value||30);
   const cutoff=days>0?new Date(Date.now()-days*86400000):null;
   const sorted=[...paramLogs].filter(e=>!cutoff||new Date(e.date)>=cutoff).reverse();
   const labels=sorted.map(e=>new Date(e.date).toLocaleDateString('en-GB',{day:'2-digit',month:'short'}));
-  const datasets=PARAMS.filter(p=>activeParams.has(p.key)).map(p=>({label:p.label+(p.unit||''),data:sorted.map(e=>e[p.key]??null),borderColor:p.color,backgroundColor:p.color+'22',borderWidth:2,pointRadius:3,pointHoverRadius:6,tension:0.35,spanGaps:true}));
-  const ctx=document.getElementById('paramChart')?.getContext('2d');
-  if (!ctx) return;
-  if (chartInstance) chartInstance.destroy();
-  if (!sorted.length){ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);ctx.fillStyle='#6a9ab8';ctx.font='13px DM Sans,sans-serif';ctx.textAlign='center';ctx.fillText('No data yet.',ctx.canvas.width/2,120);return;}
+  const datasets=PARAMS.filter(p=>activeParams.has(p.key)).map(p=>({
+    label:p.label+(p.unit||''),data:sorted.map(e=>e[p.key]??null),
+    borderColor:p.color,backgroundColor:p.color+'22',borderWidth:2,
+    pointRadius:3,pointHoverRadius:6,tension:0.35,spanGaps:true
+  }));
+  const ctx=document.getElementById('paramChart')?.getContext('2d');if(!ctx)return;
+  if(chartInstance)chartInstance.destroy();
+  if(!sorted.length){ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);ctx.fillStyle='#6a9ab8';ctx.font='13px DM Sans,sans-serif';ctx.textAlign='center';ctx.fillText('No data yet.',ctx.canvas.width/2,120);return;}
   chartInstance=new Chart(ctx,{type:'line',data:{labels,datasets},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:'#d4eaf7',font:{family:'DM Sans',size:10},boxWidth:12}},tooltip:{backgroundColor:'#0d2540',borderColor:'#123258',borderWidth:1,titleColor:'#00e5c8',bodyColor:'#d4eaf7',padding:10}},scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#6a9ab8',font:{size:9}}},y:{grid:{color:'rgba(255,255,255,0.06)'},ticks:{color:'#6a9ab8',font:{size:9}}}}}});
-}
+};
 
-// ═══════════════════════════════════════════════════════════════
-// TANK LOG
-// ═══════════════════════════════════════════════════════════════
+// ─── Tank Log ──────────────────────────────────────────────────
 const LOG_CATS=[
-  {id:'fish_add',    icon:'🐟',name:'Fish Added',    subject:'Species',   subjectPH:'e.g. Neon Tetra',     qty:true, amount:false},
-  {id:'fish_remove', icon:'🪣',name:'Fish Removed',  subject:'Species',   subjectPH:'e.g. Guppy',          qty:true, amount:false},
-  {id:'fish_death',  icon:'💀',name:'Fish Death',    subject:'Species',   subjectPH:'e.g. Platy',          qty:true, amount:false},
-  {id:'plant_add',   icon:'🌿',name:'Plant Added',   subject:'Plant',     subjectPH:'e.g. Anubias',        qty:true, amount:false},
-  {id:'plant_remove',icon:'✂️',name:'Plant Removed', subject:'Plant',     subjectPH:'e.g. Java Fern',      qty:false,amount:false},
-  {id:'filter',      icon:'⚙️',name:'Filter Clean',  subject:'Filter',    subjectPH:'e.g. Fluval 307',     qty:false,amount:false},
-  {id:'media',       icon:'🧲',name:'Media Changed', subject:'Media',     subjectPH:'e.g. Bio rings',      qty:false,amount:false},
-  {id:'fertiliser',  icon:'🌱',name:'Fertiliser',    subject:'Product',   subjectPH:'e.g. Tropica Premium',qty:false,amount:true},
-  {id:'co2',         icon:'💨',name:'CO₂ Adjusted',  subject:'Setting',   subjectPH:'e.g. 1→2 bps',       qty:false,amount:false},
-  {id:'treatment',   icon:'💊',name:'Treatment',     subject:'Product',   subjectPH:'e.g. Esha 2000',      qty:false,amount:true},
-  {id:'equipment',   icon:'🔧',name:'Equipment',     subject:'Item',      subjectPH:'e.g. Heater replaced',qty:false,amount:false},
-  {id:'light',       icon:'💡',name:'Lighting',      subject:'Change',    subjectPH:'e.g. Timer adjusted', qty:false,amount:false},
-  {id:'substrate',   icon:'🪨',name:'Substrate',     subject:'Details',   subjectPH:'e.g. Added gravel',   qty:false,amount:false},
-  {id:'observation', icon:'👁', name:'Observation',  subject:'Subject',   subjectPH:'e.g. Breeding',       qty:false,amount:false},
-  {id:'disease',     icon:'🦠',name:'Disease/Pest',  subject:'Condition', subjectPH:'e.g. White spot',     qty:false,amount:false},
-  {id:'other',       icon:'📝',name:'Other',         subject:'Title',     subjectPH:'Describe event',      qty:false,amount:false},
+  {id:'fish_add',   icon:'🐟',name:'Fish Added',  subject:'Species',  subjectPH:'e.g. Neon Tetra',    qty:true, amount:false},
+  {id:'fish_remove',icon:'🪣',name:'Fish Removed',subject:'Species',  subjectPH:'e.g. Guppy',         qty:true, amount:false},
+  {id:'fish_death', icon:'💀',name:'Fish Death',  subject:'Species',  subjectPH:'e.g. Platy',         qty:true, amount:false},
+  {id:'plant_add',  icon:'🌿',name:'Plant Added', subject:'Plant',    subjectPH:'e.g. Anubias',       qty:true, amount:false},
+  {id:'plant_remove',icon:'✂️',name:'Plant Removed',subject:'Plant', subjectPH:'e.g. Java Fern',      qty:false,amount:false},
+  {id:'filter',     icon:'⚙️',name:'Filter Clean',subject:'Filter',  subjectPH:'e.g. Fluval 307',    qty:false,amount:false},
+  {id:'media',      icon:'🧲',name:'Media Changed',subject:'Media',  subjectPH:'e.g. Bio rings',     qty:false,amount:false},
+  {id:'fertiliser', icon:'🌱',name:'Fertiliser',  subject:'Product', subjectPH:'e.g. Tropica Premium',qty:false,amount:true},
+  {id:'co2',        icon:'💨',name:'CO₂ Adjusted',subject:'Setting', subjectPH:'e.g. 1→2 bps',      qty:false,amount:false},
+  {id:'treatment',  icon:'💊',name:'Treatment',   subject:'Product', subjectPH:'e.g. Esha 2000',     qty:false,amount:true},
+  {id:'equipment',  icon:'🔧',name:'Equipment',   subject:'Item',    subjectPH:'e.g. Heater replaced',qty:false,amount:false},
+  {id:'light',      icon:'💡',name:'Lighting',    subject:'Change',  subjectPH:'e.g. Timer adjusted', qty:false,amount:false},
+  {id:'substrate',  icon:'🪨',name:'Substrate',   subject:'Details', subjectPH:'e.g. Added gravel',  qty:false,amount:false},
+  {id:'observation',icon:'👁', name:'Observation', subject:'Subject', subjectPH:'e.g. Breeding',      qty:false,amount:false},
+  {id:'disease',    icon:'🦠',name:'Disease/Pest',subject:'Condition',subjectPH:'e.g. White spot',   qty:false,amount:false},
+  {id:'other',      icon:'📝',name:'Other',       subject:'Title',   subjectPH:'Describe event',     qty:false,amount:false},
 ];
 const catById=id=>LOG_CATS.find(c=>c.id===id)||LOG_CATS[LOG_CATS.length-1];
 const CAT_BADGE={fish_add:'badge-teal',fish_remove:'badge-gray',fish_death:'badge-pink',plant_add:'badge-green',plant_remove:'badge-gray',filter:'badge-blue',media:'badge-blue',fertiliser:'badge-green',co2:'badge-blue',treatment:'badge-warn',disease:'badge-pink',equipment:'badge-gray',light:'badge-gray',substrate:'badge-gray',observation:'badge-purple',other:'badge-gray'};
-let selectedCat='fish_add';
-let logFilter='all';
+let selectedCat='fish_add', logFilter='all';
 
-function renderCatGrid() {
+window.renderCatGrid = () => {
   document.getElementById('cat-grid').innerHTML=LOG_CATS.map(c=>`
     <div class="cat-card ${c.id===selectedCat?'selected':''}" onclick="selectCat('${c.id}')">
-      <div class="cat-icon">${c.icon}</div>
-      <div class="cat-name">${c.name}</div>
+      <div class="cat-icon">${c.icon}</div><div class="cat-name">${c.name}</div>
     </div>`).join('');
-}
+};
 
-function selectCat(id) {
-  selectedCat=id; renderCatGrid();
+window.selectCat = id => {
+  selectedCat=id;renderCatGrid();
   const cat=catById(id);
-  const sw=document.getElementById('log-subject-wrap');
-  sw.style.display='flex';
+  document.getElementById('log-subject-wrap').style.display='flex';
   document.getElementById('log-subject-label').textContent=cat.subject;
   document.getElementById('log-subject').placeholder=cat.subjectPH;
-  const qw=document.getElementById('log-qty-wrap');
-  const aw=document.getElementById('log-amount-wrap');
-  const er=document.getElementById('log-extra-row');
-  qw.style.display=cat.qty?'flex':'none';
-  aw.style.display=cat.amount?'flex':'none';
-  er.style.display=(cat.qty||cat.amount)?'grid':'none';
-}
+  document.getElementById('log-qty-wrap').style.display=cat.qty?'flex':'none';
+  document.getElementById('log-amount-wrap').style.display=cat.amount?'flex':'none';
+  document.getElementById('log-extra-row').style.display=(cat.qty||cat.amount)?'grid':'none';
+};
 
-function saveLogEntry() {
+window.saveLogEntry = async () => {
   const date=document.getElementById('log-date').value;
   if(!date){toast('Pick a date','err');return;}
   const cat=catById(selectedCat);
   const subj=document.getElementById('log-subject').value.trim();
   if(!subj&&selectedCat!=='other'){toast(`Enter the ${cat.subject.toLowerCase()}`,'err');return;}
-  tankLog.unshift({
-    id:Date.now(),date,cat:selectedCat,subject:subj,
-    qty:    cat.qty    ?(parseInt(document.getElementById('log-qty').value)||null)  :null,
-    amount: cat.amount ?(document.getElementById('log-amount').value.trim()||null) :null,
-    notes:  document.getElementById('log-notes').value.trim(),
+  await addToCol('tankLog',{
+    date,cat:selectedCat,subject:subj,
+    qty:   cat.qty   ?(parseInt(document.getElementById('log-qty').value)||null):null,
+    amount:cat.amount?(document.getElementById('log-amount').value.trim()||null):null,
+    notes: document.getElementById('log-notes').value.trim()
   });
-  saveLS(KEY_LOG,tankLog);
   toast('Entry saved! 📝');
   clearLogForm();
-  scheduleLocalReminders(); // reschedule after filter/fertiliser log
-}
+  scheduleLocalReminders();
+};
 
-function clearLogForm() {
+window.clearLogForm = () => {
   document.getElementById('log-date').value=today();
   document.getElementById('log-subject').value='';
   document.getElementById('log-notes').value='';
-  const q=document.getElementById('log-qty'), a=document.getElementById('log-amount');
-  if(q)q.value=''; if(a)a.value='';
-}
+  const q=document.getElementById('log-qty'),a=document.getElementById('log-amount');
+  if(q)q.value='';if(a)a.value='';
+};
 
-function deleteLogEntry(id){if(!confirm('Delete?'))return;tankLog=tankLog.filter(e=>e.id!==id);saveLS(KEY_LOG,tankLog);renderLogTimeline();renderLogFilterBar();renderFullHistory();toast('Deleted');scheduleLocalReminders();}
+window.deleteLogEntry = async fid => {
+  if(!confirm('Delete?'))return;await delFromCol('tankLog',fid);
+  scheduleLocalReminders();
+};
 
-function renderLogFilterBar() {
+window.renderLogFilterBar = () => {
   const used=new Set(tankLog.map(e=>e.cat));
-  const bar=document.getElementById('log-filter-bar');
   let html=`<button class="filter-btn ${logFilter==='all'?'on':''}" onclick="setLogFilter('all')">All</button>`;
   LOG_CATS.filter(c=>used.has(c.id)).forEach(c=>{html+=`<button class="filter-btn ${logFilter===c.id?'on':''}" onclick="setLogFilter('${c.id}')">${c.icon} ${c.name}</button>`;});
-  bar.innerHTML=html;
-}
-function setLogFilter(f){logFilter=f;renderLogFilterBar();renderLogTimeline();}
+  document.getElementById('log-filter-bar').innerHTML=html;
+};
 
-function renderLogTimeline() {
+window.setLogFilter = f=>{logFilter=f;renderLogFilterBar();renderLogTimeline();};
+
+window.renderLogTimeline = () => {
   const tl=document.getElementById('log-timeline');
   const entries=logFilter==='all'?tankLog:tankLog.filter(e=>e.cat===logFilter);
   if(!entries.length){tl.innerHTML=`<div class="empty"><div class="icon">📓</div><p>${tankLog.length?'No entries match this filter.':'No log entries yet.'}</p></div>`;return;}
   tl.innerHTML=`<div class="timeline">${entries.map(e=>{
-    const cat=catById(e.cat);const bc=CAT_BADGE[e.cat]||'badge-gray';
+    const cat=catById(e.cat),bc=CAT_BADGE[e.cat]||'badge-gray';
     const details=[e.subject?`<strong>${e.subject}</strong>`:null,e.qty?`×${e.qty}`:null,e.amount?`(${e.amount})`:null].filter(Boolean).join(' ');
-    return `<div class="tl-item"><div class="tl-date">${fmtDate(e.date)}</div>
+    return`<div class="tl-item"><div class="tl-date">${fmtDate(e.date)}</div>
       <div class="tl-body"><span class="badge ${bc}">${cat.icon} ${cat.name}</span>
       <div><div class="tl-text">${details||'—'}</div>${e.notes?`<div class="tl-note">${e.notes}</div>`:''}</div>
-      <button class="btn btn-danger btn-sm tl-del" onclick="deleteLogEntry(${e.id})">✕</button></div>
-    </div>`;
+      <button class="btn btn-danger btn-sm tl-del" onclick="deleteLogEntry('${e._fid}')">✕</button></div></div>`;
   }).join('')}</div>`;
-}
+};
 
-// ═══════════════════════════════════════════════════════════════
-// DASHBOARD
-// ═══════════════════════════════════════════════════════════════
-function calcFishCount() {
+// ─── Dashboard ─────────────────────────────────────────────────
+function calcFishCount(){
   let added=0,died=0,removed=0;
   tankLog.forEach(e=>{const q=e.qty||1;if(e.cat==='fish_add')added+=q;if(e.cat==='fish_death')died+=q;if(e.cat==='fish_remove')removed+=q;});
   return{added,died,removed,total:Math.max(0,added-died-removed)};
 }
 
-function reminderBannerHTML(icon, label, lastDate, freqDays) {
-  if (!freqDays||freqDays<=0) return '';
-  const today=new Date();today.setHours(0,0,0,0);
-  let diff, lastFmt, cls;
-  if (lastDate) {
-    const next=new Date(lastDate.getTime()+freqDays*86400000);
-    diff=Math.ceil((next-today)/86400000);
-    lastFmt=lastDate.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
-    cls=diff<0?'overdue':diff<=2?'due':'';
-  } else { diff=null; lastFmt=null; cls=''; }
+function reminderBannerHTML(icon,label,lastDate,freqDays){
+  if(!freqDays||freqDays<=0)return'';
+  const now=new Date();now.setHours(0,0,0,0);
+  let diff,lastFmt,cls;
+  if(lastDate){const next=new Date(lastDate.getTime()+freqDays*86400000);diff=Math.ceil((next-now)/86400000);lastFmt=lastDate.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});cls=diff<0?'overdue':diff<=2?'due':'';}
+  else{diff=null;lastFmt=null;cls='';}
   const val=diff===null?'Not yet logged':diff<0?Math.abs(diff)+' day(s) overdue':diff===0?'Due today!':'In '+diff+' day(s)';
   const sub=lastFmt?'Last: '+lastFmt:'Every '+freqDays+' days';
-  return `<div class="banner-card ${cls}"><div class="bc-icon">${icon}</div><div><div class="bc-label">${label}</div><div class="bc-val">${val}</div><div class="bc-sub">${sub}</div></div></div>`;
+  return`<div class="banner-card ${cls}"><div class="bc-icon">${icon}</div><div><div class="bc-label">${label}</div><div class="bc-val">${val}</div><div class="bc-sub">${sub}</div></div></div>`;
 }
 
-function renderDashboard() {
-  // Water change
+window.renderDashboard = () => {
+  // Water change banner
   const wc=waterChanges[0];
   const freq=parseInt(settings.changeFreq||7);
   const wcdiv=document.getElementById('dash-wc-banner');
-  if (wc) {
-    const last=new Date(wc.date+'T00:00:00');
-    const next=new Date(last.getTime()+freq*86400000);
+  if(wc){
+    const last=new Date(wc.date+'T00:00:00'),next=new Date(last.getTime()+freq*86400000);
     const now=new Date();now.setHours(0,0,0,0);
-    const diff=Math.ceil((next-now)/86400000);
-    const overdue=diff<0;
+    const diff=Math.ceil((next-now)/86400000),overdue=diff<0;
     wcdiv.innerHTML=`<div class="banner-card ${overdue?'overdue':''}">
       <div class="bc-icon">${overdue?'⚠️':'💧'}</div>
       <div><div class="bc-label">${overdue?'Water change overdue':'Next water change'}</div>
@@ -1281,144 +897,191 @@ function renderDashboard() {
 
   // Reminders
   const lastFert=tankLog.find(e=>e.cat==='fertiliser');
-  const lastFertDate=lastFert?new Date(lastFert.date+'T00:00:00'):null;
   const lastFilter=tankLog.find(e=>e.cat==='filter'||e.cat==='media');
-  const lastFilterDate=lastFilter?new Date(lastFilter.date+'T00:00:00'):null;
   document.getElementById('dash-reminders').innerHTML=
-    reminderBannerHTML('🌱','Fertiliser',lastFertDate,parseInt(settings.fertiliserFreq)||7)+
-    reminderBannerHTML('⚙️','Filter / Media',lastFilterDate,parseInt(settings.filterFreq)||30);
+    reminderBannerHTML('🌱','Fertiliser',lastFert?new Date(lastFert.date+'T00:00:00'):null,parseInt(settings.fertiliserFreq)||7)+
+    reminderBannerHTML('⚙️','Filter / Media',lastFilter?new Date(lastFilter.date+'T00:00:00'):null,parseInt(settings.filterFreq)||30);
 
   // Fish count
   const fc=calcFishCount();
-  const fishDiv=document.getElementById('dash-fish');
-  fishDiv.innerHTML=fc.added>0?`<div class="fish-count-banner"><div class="fc-icon">🐟</div><div><div class="fc-num">${fc.total}</div><div class="fc-lbl">Fish in tank</div><div class="fc-detail">${fc.added} added${fc.died?', '+fc.died+' died':''}${fc.removed?', '+fc.removed+' removed':''}</div></div></div>`:'';
+  document.getElementById('dash-fish').innerHTML=fc.added>0?`<div class="fish-count-banner"><div class="fc-icon">🐟</div><div><div class="fc-num">${fc.total}</div><div class="fc-lbl">Fish in tank</div><div class="fc-detail">${fc.added} added${fc.died?', '+fc.died+' died':''}${fc.removed?', '+fc.removed+' removed':''}</div></div></div>`:'';
 
   // Latest params
   const latest=paramLogs[0];
   const pdiv=document.getElementById('dash-params');
-  if (latest) {
-    const boxes=PARAMS.filter(p=>latest[p.key]!=null).map(p=>{
-      const fn={ph:v=>v>=6.5&&v<=7.8?'good':'warn',ammonia:v=>v===0?'good':v<0.25?'warn':'bad',nitrite:v=>v===0?'good':v<0.25?'warn':'bad',nitrate:v=>v<=20?'good':v<=40?'warn':'bad',temp:v=>v>=23&&v<=27?'good':'warn'}[p.key];
-      const cls=typeof fn==='function'?fn(latest[p.key]):'good';
-      return`<div class="stat-box ${cls}"><div class="stat-status-dot"></div><div class="val">${latest[p.key]}<span>${p.unit}</span></div><div class="lbl">${p.label}</div></div>`;
-    }).join('');
+  if(latest){
+    const statusFn={ph:v=>v>=6.5&&v<=7.8?'good':'warn',ammonia:v=>v===0?'good':v<0.25?'warn':'bad',nitrite:v=>v===0?'good':v<0.25?'warn':'bad',nitrate:v=>v<=20?'good':v<=40?'warn':'bad',temp:v=>v>=23&&v<=27?'good':'warn'};
+    const boxes=PARAMS.filter(p=>latest[p.key]!=null).map(p=>{const fn=statusFn[p.key];const cls=typeof fn==='function'?fn(latest[p.key]):'good';return`<div class="stat-box ${cls}"><div class="stat-status-dot"></div><div class="val">${latest[p.key]}<span>${p.unit}</span></div><div class="lbl">${p.label}</div></div>`;}).join('');
     pdiv.innerHTML=boxes?`<div class="stats-grid">${boxes}</div>`:'';
-  } else { pdiv.innerHTML=''; }
+  } else {pdiv.innerHTML='';}
 
-  // Recent activity
+  // Activity
   const act=document.getElementById('dash-activity');
   const combined=[
     ...waterChanges.slice(0,3).map(e=>({...e,_type:'wc',_sort:new Date(e.date+'T00:00:00')})),
     ...paramLogs.slice(0,3).map(e=>({...e,_type:'param',_sort:new Date(e.date)})),
     ...tankLog.slice(0,3).map(e=>({...e,_type:'log',_sort:new Date(e.date+'T00:00:00')})),
   ].sort((a,b)=>b._sort-a._sort).slice(0,8);
-  if (!combined.length){act.innerHTML=`<div class="empty"><div class="icon">📋</div><p>Nothing logged yet.</p></div>`;return;}
+  if(!combined.length){act.innerHTML=`<div class="empty"><div class="icon">📋</div><p>Nothing logged yet.</p></div>`;return;}
   act.innerHTML=combined.map(e=>{
     let badge,detail;
-    if (e._type==='wc'){badge=`<span class="badge badge-blue">💧 Water Change</span>`;detail=[e.percent?e.percent+'%':null,e.litres?e.litres+'L':null,e.treatment||null].filter(Boolean).join(' · ')||'—';}
+    if(e._type==='wc'){badge=`<span class="badge badge-blue">💧 Water Change</span>`;detail=[e.percent?e.percent+'%':null,e.litres?e.litres+'L':null,e.treatment||null].filter(Boolean).join(' · ')||'—';}
     else if(e._type==='param'){badge=`<span class="badge badge-teal">🧪 Test</span>`;detail=PARAMS.filter(p=>e[p.key]!=null).slice(0,3).map(p=>p.label+': '+e[p.key]+p.unit).join(', ')||'—';}
-    else{const cat=catById(e.cat);const bc=CAT_BADGE[e.cat]||'badge-gray';badge=`<span class="badge ${bc}">${cat.icon} ${cat.name}</span>`;detail=[e.subject,e.qty?'×'+e.qty:null,e.amount?'('+e.amount+')':null].filter(Boolean).join(' ')||'—';}
-    const dt=e._type==='param'?fmtDateTime(e.date):fmtDate(e.date);
-    return`<div class="hist-item"><div class="hist-top">${badge}<span class="hist-date">${dt}</span></div><div class="hist-detail">${detail}</div></div>`;
+    else{const cat=catById(e.cat),bc=CAT_BADGE[e.cat]||'badge-gray';badge=`<span class="badge ${bc}">${cat.icon} ${cat.name}</span>`;detail=[e.subject,e.qty?'×'+e.qty:null,e.amount?'('+e.amount+')':null].filter(Boolean).join(' ')||'—';}
+    return`<div class="hist-item"><div class="hist-top">${badge}<span class="hist-date">${e._type==='param'?fmtDateTime(e.date):fmtDate(e.date)}</span></div><div class="hist-detail">${detail}</div></div>`;
   }).join('');
-}
+};
 
-// ═══════════════════════════════════════════════════════════════
-// FULL HISTORY
-// ═══════════════════════════════════════════════════════════════
-function renderFullHistory() {
+// ─── Full History ──────────────────────────────────────────────
+window.renderFullHistory = () => {
   const el=document.getElementById('full-history');
   const combined=[
     ...waterChanges.map(e=>({...e,_type:'wc',_sort:new Date(e.date+'T00:00:00')})),
     ...paramLogs.map(e=>({...e,_type:'param',_sort:new Date(e.date)})),
     ...tankLog.map(e=>({...e,_type:'log',_sort:new Date(e.date+'T00:00:00')})),
   ].sort((a,b)=>b._sort-a._sort);
-  if (!combined.length){el.innerHTML=`<div class="empty"><div class="icon">🗂</div><p>No data yet.</p></div>`;return;}
+  if(!combined.length){el.innerHTML=`<div class="empty"><div class="icon">🗂</div><p>No data yet.</p></div>`;return;}
   el.innerHTML=combined.map(e=>{
-    let badge,detail,delFn;
-    if(e._type==='wc'){badge=`<span class="badge badge-blue">💧 Water Change</span>`;detail=[e.percent?e.percent+'%':null,e.litres?e.litres+'L':null,e.treatment||null].filter(Boolean).join(' · ')||'—';delFn=`deleteWC(${e.id});renderFullHistory()`;}
-    else if(e._type==='param'){badge=`<span class="badge badge-teal">🧪 Test</span>`;detail=PARAMS.filter(p=>e[p.key]!=null).map(p=>p.label+': '+e[p.key]+p.unit).join(', ')||'—';delFn=`deleteParam(${e.id})`;}
-    else{const cat=catById(e.cat);const bc=CAT_BADGE[e.cat]||'badge-gray';badge=`<span class="badge ${bc}">${cat.icon} ${cat.name}</span>`;detail=[e.subject,e.qty?'×'+e.qty:null,e.amount?'('+e.amount+')':null].filter(Boolean).join(' ')||'—';delFn=`deleteLogEntry(${e.id});renderFullHistory()`;}
-    const dt=e._type==='param'?fmtDateTime(e.date):fmtDate(e.date);
-    return`<div class="hist-item"><div class="hist-top">${badge}<span class="hist-date">${dt}</span><button class="btn btn-danger btn-sm" style="margin-left:6px;padding:4px 8px;font-size:0.7rem" onclick="${delFn}">✕</button></div><div class="hist-detail">${detail}</div>${e.notes?`<div class="hist-note">${e.notes}</div>`:''}</div>`;
+    let badge,detail,delCall;
+    if(e._type==='wc'){badge=`<span class="badge badge-blue">💧 Water Change</span>`;detail=[e.percent?e.percent+'%':null,e.litres?e.litres+'L':null,e.treatment||null].filter(Boolean).join(' · ')||'—';delCall=`deleteWC('${e._fid}')`;}
+    else if(e._type==='param'){badge=`<span class="badge badge-teal">🧪 Test</span>`;detail=PARAMS.filter(p=>e[p.key]!=null).map(p=>p.label+': '+e[p.key]+p.unit).join(', ')||'—';delCall=`deleteParam('${e._fid}')`;}
+    else{const cat=catById(e.cat),bc=CAT_BADGE[e.cat]||'badge-gray';badge=`<span class="badge ${bc}">${cat.icon} ${cat.name}</span>`;detail=[e.subject,e.qty?'×'+e.qty:null,e.amount?'('+e.amount+')':null].filter(Boolean).join(' ')||'—';delCall=`deleteLogEntry('${e._fid}')`;}
+    return`<div class="hist-item"><div class="hist-top">${badge}<span class="hist-date">${e._type==='param'?fmtDateTime(e.date):fmtDate(e.date)}</span><button class="btn btn-danger btn-sm" style="padding:4px 8px;font-size:0.7rem" onclick="${delCall}">✕</button></div><div class="hist-detail">${detail}</div>${e.notes?`<div class="hist-note">${e.notes}</div>`:''}</div>`;
   }).join('');
-}
+};
 
-// ═══════════════════════════════════════════════════════════════
-// SETTINGS FORM
-// ═══════════════════════════════════════════════════════════════
-function populateSettingsForm() {
-  document.getElementById('set-name').value             = settings.tankName||'';
-  document.getElementById('set-vol').value              = settings.tankVol||'';
-  document.getElementById('set-freq').value             = settings.changeFreq||7;
-  document.getElementById('set-fertiliser-freq').value  = settings.fertiliserFreq||7;
-  document.getElementById('set-filter-freq').value      = settings.filterFreq||30;
-  const np=notifPrefs;
-  if(document.getElementById('nt-wc'))    document.getElementById('nt-wc').checked    =np.wc!==false;
-  if(document.getElementById('nt-fert'))  document.getElementById('nt-fert').checked  =np.fert!==false;
-  if(document.getElementById('nt-filter'))document.getElementById('nt-filter').checked=np.filter!==false;
-}
+// ─── Settings form ─────────────────────────────────────────────
+window.populateSettingsForm = () => {
+  document.getElementById('set-name').value            = settings.tankName||'';
+  document.getElementById('set-vol').value             = settings.tankVol||'';
+  document.getElementById('set-freq').value            = settings.changeFreq||7;
+  document.getElementById('set-fertiliser-freq').value = settings.fertiliserFreq||7;
+  document.getElementById('set-filter-freq').value     = settings.filterFreq||30;
+};
 
-function buildRangesGrid() {
+window.buildRangesGrid = () => {
   document.getElementById('ranges-grid').innerHTML=PARAMS.map(p=>{
     const r=settings.ranges[p.key]||DEFAULT_SETTINGS.ranges[p.key];
-    return`<div class="range-row">
-      <div class="rr-label">${p.icon} ${p.label}</div>
+    return`<div class="range-row"><div class="rr-label">${p.icon} ${p.label}</div>
       <div class="rr-inputs">
         <input type="number" id="range-min-${p.key}" step="any" value="${r.min}" inputmode="decimal">
         <div class="rr-sep">to</div>
         <input type="number" id="range-max-${p.key}" step="any" value="${r.max}" inputmode="decimal">
-      </div>
-      <div class="rr-unit">Unit: ${p.unit||'(dimensionless)'}</div>
-    </div>`;
+      </div><div class="rr-unit">Unit: ${p.unit||'(dimensionless)'}</div></div>`;
   }).join('');
-}
+};
 
-function exportData() {
+window.exportData = () => {
   const data={waterChanges,paramLogs,tankLog,settings,exportedAt:new Date().toISOString()};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='aqualog-export-'+today()+'.json';a.click();toast('Exported! 📦');
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='aqualog-backup-'+today()+'.json';a.click();toast('Backup exported! 📦');
+};
+
+window.clearAllData = async () => {
+  if(!confirm('Delete ALL your data from the cloud? This cannot be undone.'))return;
+  if(!confirm('Last chance — permanently delete everything?'))return;
+  toast('Deleting…','wrn');
+  // Delete in batches by unsubscribing won't delete docs — need to delete each
+  const allWC=[...waterChanges],allP=[...paramLogs],allL=[...tankLog];
+  for(const e of allWC) await delFromCol('waterChanges',e._fid).catch(()=>{});
+  for(const e of allP)  await delFromCol('paramLogs',e._fid).catch(()=>{});
+  for(const e of allL)  await delFromCol('tankLog',e._fid).catch(()=>{});
+  toast('All data deleted','err');
+};
+
+// ─── Notifications ─────────────────────────────────────────────
+let notifPrefs={wc:true,fert:true,filter:true};
+let reminderTimers=[];
+
+window.requestNotifPermission = async () => {
+  if(!('Notification' in window)){toast('Notifications not supported','wrn');return;}
+  const perm=await Notification.requestPermission();
+  updateNotifUI();
+  if(perm==='granted'){toast('Notifications enabled! 🔔');scheduleLocalReminders();}
+  else toast('Permission denied','wrn');
+};
+
+window.updateNotifUI = () => {
+  const perm=typeof Notification!=='undefined'?Notification.permission:'default';
+  const btn=document.getElementById('notif-enable-btn');
+  const panel=document.getElementById('notif-settings-panel');
+  const testBtn=document.getElementById('test-notif-btn');
+  const status=document.getElementById('notif-status-text');
+  if(perm==='granted'){btn.style.display='none';panel.style.display='block';testBtn.style.display='inline-block';status.textContent='Push notifications enabled. Toggle reminders below.';}
+  else if(perm==='denied'){btn.textContent='Notifications Blocked — Enable in Browser Settings';btn.disabled=true;status.textContent='Notifications are blocked. Enable them in your browser/phone settings.';}
+  else{btn.style.display='block';panel.style.display='none';status.textContent='Enable push notifications to get reminders for water changes, fertiliser, and filter cleaning.';}
+  document.getElementById('nr-wc-sub').textContent    =`Every ${settings.changeFreq||7} days`;
+  document.getElementById('nr-fert-sub').textContent  =`Every ${settings.fertiliserFreq||7} days`;
+  document.getElementById('nr-filter-sub').textContent=`Every ${settings.filterFreq||30} days`;
+};
+
+window.saveNotifPrefs = () => {
+  notifPrefs={wc:document.getElementById('nt-wc')?.checked??true,fert:document.getElementById('nt-fert')?.checked??true,filter:document.getElementById('nt-filter')?.checked??true};
+  scheduleLocalReminders();
+};
+
+function scheduleLocalReminders(){
+  reminderTimers.forEach(t=>clearTimeout(t));reminderTimers=[];
+  if(typeof Notification==='undefined'||Notification.permission!=='granted')return;
+  function schedule(title,body,lastDate,freqDays,enabled){
+    if(!enabled||!freqDays)return;
+    const msUntil=lastDate?new Date(lastDate.getTime()+freqDays*86400000).getTime()-Date.now():freqDays*86400000;
+    const delay=msUntil<0?4000:msUntil; // already overdue → show shortly after app opens
+    reminderTimers.push(setTimeout(()=>showLocalNotif(title,body),delay));
+  }
+  const lastWC=waterChanges[0]?new Date(waterChanges[0].date+'T00:00:00'):null;
+  const lastFert=tankLog.find(e=>e.cat==='fertiliser')?new Date(tankLog.find(e=>e.cat==='fertiliser').date+'T00:00:00'):null;
+  const lastFilt=tankLog.find(e=>e.cat==='filter'||e.cat==='media')?new Date(tankLog.find(e=>e.cat==='filter'||e.cat==='media').date+'T00:00:00'):null;
+  schedule('💧 Water Change Due',`Time for your ${settings.changeFreq||7}-day water change!`,lastWC,settings.changeFreq||7,notifPrefs.wc);
+  schedule('🌱 Fertiliser Due',`Time to dose fertiliser (every ${settings.fertiliserFreq||7} days).`,lastFert,settings.fertiliserFreq||7,notifPrefs.fert);
+  schedule('⚙️ Filter Maintenance Due',`Time to clean filter media (every ${settings.filterFreq||30} days).`,lastFilt,settings.filterFreq||30,notifPrefs.filter);
 }
 
-function clearAllData() {
-  if(!confirm('Delete ALL data?'))return;if(!confirm('Last chance — permanently delete?'))return;
-  [KEY_WC,KEY_PARAMS,KEY_LOG].forEach(k=>localStorage.removeItem(k));
-  waterChanges=[];paramLogs=[];tankLog=[];toast('Data cleared','err');renderDashboard();
+function showLocalNotif(title,body){
+  if(typeof Notification==='undefined'||Notification.permission!=='granted')return;
+  if('serviceWorker' in navigator){navigator.serviceWorker.ready.then(reg=>reg.showNotification(title,{body,icon:'./icons/icon-192.png',tag:title}));}
+  else new Notification(title,{body,icon:'./icons/icon-192.png'});
 }
 
-// ═══════════════════════════════════════════════════════════════
-// HELPERS
-// ═══════════════════════════════════════════════════════════════
-function today()    {return new Date().toISOString().split('T')[0];}
-function nowLocal() {return new Date().toISOString().slice(0,16);}
-function pf(id)     {const v=document.getElementById(id)?.value;return v!==''&&v!==undefined?parseFloat(v):null;}
-function fmtDate(s) {if(!s)return'—';return new Date(s.length===10?s+'T00:00:00':s).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});}
+window.sendTestNotification=()=>{showLocalNotif('🐠 AquaLog Test','Your reminders are working correctly!');toast('Test notification sent!');};
+window.handleNotifBtn=()=>switchPage(document.querySelector('[data-page=settings]'));
+
+// ─── PWA install ───────────────────────────────────────────────
+let deferredInstallPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;document.getElementById('install-banner').style.display='flex';});
+window.addEventListener('appinstalled',()=>{document.getElementById('install-banner').style.display='none';deferredInstallPrompt=null;toast('AquaLog installed! 🎉');});
+window.triggerInstall=()=>{if(!deferredInstallPrompt){toast('Use "Add to Home Screen" in your browser menu','wrn');return;}deferredInstallPrompt.prompt();deferredInstallPrompt.userChoice.then(r=>{if(r.outcome==='accepted')toast('Installing…');deferredInstallPrompt=null;});};
+
+// ─── Service worker ────────────────────────────────────────────
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js').catch(e=>console.warn('SW:',e));});}
+
+// ─── Page switching ─────────────────────────────────────────────
+window.switchPage = btn => {
+  const id=btn.dataset.page;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  btn.classList.add('active');
+  document.getElementById('page-content').scrollTop=0;
+  if(id==='dashboard') renderDashboard();
+  if(id==='log'){renderCatGrid();buildParamForm();}
+  if(id==='history'){renderLogTimeline();renderLogFilterBar();renderFullHistory();renderParamToggles();renderChart();}
+  if(id==='settings'){populateSettingsForm();buildRangesGrid();updateNotifUI();}
+};
+
+// ─── Helpers ───────────────────────────────────────────────────
+window.toast=(msg,type='ok')=>{const box=document.getElementById('alert-box');const el=document.createElement('div');el.className=`toast ${type}`;el.innerHTML=(type==='ok'?'✅':type==='wrn'?'⚠️':'❌')+' '+msg;box.appendChild(el);setTimeout(()=>el.remove(),3200);};
+function today(){return new Date().toISOString().split('T')[0];}
+function nowLocal(){return new Date().toISOString().slice(0,16);}
+function pf(id){const v=document.getElementById(id)?.value;return v!==''&&v!==undefined?parseFloat(v):null;}
+function fmtDate(s){if(!s)return'—';return new Date(s.length===10?s+'T00:00:00':s).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});}
 function fmtDateTime(s){if(!s)return'—';return new Date(s).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});}
 function applyTankLabel(){if(settings.tankName)document.getElementById('tank-label').textContent=settings.tankName;}
 
-// ═══════════════════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════════════════
-(async()=>{
-  const fetched=await tryFetchSettings();
-  if(fetched){
-    const el=document.getElementById('file-status-banner');
-    el.className='file-status loaded';
-    el.innerHTML=`<span class="fs-icon">📖</span><div><div>settings.json loaded (read-only)</div><div class="fs-path">Link for write access.</div></div>`;
-  }
-  document.getElementById('wc-date').value    =today();
-  document.getElementById('param-date').value =nowLocal();
-  document.getElementById('log-date').value   =today();
-  applyTankLabel();
-  renderDashboard();
-  renderCatGrid();
-  selectCat(selectedCat);
-  buildParamForm();
-  updateNotifUI();
-  scheduleLocalReminders();
-  registerPeriodicSync();
-  if(Notification.permission==='granted') scheduleLocalReminders();
-})();
+// ─── Init ──────────────────────────────────────────────────────
+document.getElementById('wc-date').value   =today();
+document.getElementById('param-date').value=nowLocal();
+document.getElementById('log-date').value  =today();
 </script>
 </body>
 </html>
